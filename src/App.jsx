@@ -8,6 +8,7 @@ function App() {
   return (
     <Fragment>
       <Navbar />
+
       {/* <PrimaryButton> Hello </PrimaryButton> */}
     </Fragment>
   );

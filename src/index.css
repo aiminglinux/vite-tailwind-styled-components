@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .btn-outline {
+    @apply justify-center rounded-md border-none p-2 hover:bg-gray-400;
+  }
+  ,
+  .btn-primary {
+    @apply;
+  }
+}
