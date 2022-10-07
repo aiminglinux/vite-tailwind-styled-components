@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-outline {
-    @apply justify-center rounded-md border-none p-2 hover:bg-gray-400;
+  .btn-text {
+    @apply hover:border hover:border-solid hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600;
   }
-  ,
+}
+
+@layer components {
   .btn-primary {
-    @apply;
+    @apply border border-solid text-blue-600 border-blue-500 hover:text-white hover:bg-blue-600;
   }
 }
