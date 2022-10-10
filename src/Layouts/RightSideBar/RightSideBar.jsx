@@ -108,11 +108,6 @@ const Header = tw.div`flex p-4 border-b`;
 const TagName = tw.h3`text-xl `;
 const ContentWrapper = tw.div`p-4 space-y-2 hover:bg-white`;
 const Content = tw.a``;
-// const ContentFooter = styled.div`
-//   > span {
-//     ${tw`rounded-md p-1 bg-yellow-200`}
-//   }
-// `;
 const ContentFooter = tw.div``;
 const Footer = styled.div`
   > span {

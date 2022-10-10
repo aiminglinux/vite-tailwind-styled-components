@@ -1,7 +1,11 @@
 import tw from "twin.macro";
-import Button from "../Button/Button";
+import RegisterForm from "./components/RegisterForm/RegisterForm";
 
 function Register() {
+  const handleRegisterFormSubmit = (values) => {
+    console.log("Register data: ", values);
+  };
+
   return (
     <Wrapper>
       <Inner>
@@ -12,13 +16,12 @@ function Register() {
             as HTML/CSS, ReactJS and NodeJS
           </p>
         </div>
-        <Button isFull>Register</Button>
+        <RegisterForm onSubmit={handleRegisterFormSubmit} />
       </Inner>
     </Wrapper>
   );
 }
 
-const Wrapper = tw.section`w-[640px] h-[500px] bg-white rounded-md border border-solid mx-auto`;
-const Inner = tw.div`p-12`;
-
+const Wrapper = tw.section`w-full md:w-[60%] bg-white rounded-md border border-solid mx-auto`;
+const Inner = tw.div`p-2 md:p-12 space-y-4`;
 export default Register;
