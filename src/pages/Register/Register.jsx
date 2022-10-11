@@ -1,5 +1,5 @@
 import tw from "twin.macro";
-import RegisterForm from "./components/RegisterForm/RegisterForm";
+import RegisterForm from "./components/RegisterForm";
 
 function Register() {
   const handleRegisterFormSubmit = (values) => {
@@ -22,6 +22,6 @@ function Register() {
   );
 }
 
-const Wrapper = tw.section`w-full md:w-[60%] bg-white rounded-md border border-solid mx-auto`;
+const Wrapper = tw.section`w-full md:w-[80%] lg:w-[60%] bg-white rounded-md border border-solid mx-auto`;
 const Inner = tw.div`p-2 md:p-12 space-y-4`;
 export default Register;
