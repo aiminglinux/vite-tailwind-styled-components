@@ -9,6 +9,7 @@ import Button from "../../../components/Button/Button";
 
 const RegisterSchema = yup.object().shape({
   email: yup.string().email().required(),
+  name: yup.string().required(),
   username: yup
     .string()
     .matches(/^\S*$/, "Whitespace is not allowed in your username")
@@ -20,6 +21,7 @@ const RegisterSchema = yup.object().shape({
 });
 
 const RegisterForm = ({ onSubmit }) => {
+  const [avatar, setAvatar] = useState();
   const {
     register,
     setValue,
@@ -32,11 +34,13 @@ const RegisterForm = ({ onSubmit }) => {
   });
 
   const handleFormSubmit = (values) => {
-    if (!avatar) {
-      const { email, username, password } = values;
-      onSubmit({ email, username, password });
-      return;
-    }
+    console.log(avatar);
+    // if (!avatar) {
+    //   const { name, email, username, password } = values;
+    //   onSubmit({ name, email, username, password });
+    //   return;
+    // }
+    // values.picture = avatar.preview;
     onSubmit(values);
   };
 
@@ -52,8 +56,6 @@ const RegisterForm = ({ onSubmit }) => {
 
   const imgURL =
     "https://res.cloudinary.com/drkdy5tsq/image/upload/v1663835541/default/default-avatar_sbpczw.png";
-
-  const [avatar, setAvatar] = useState();
 
   useEffect(() => {
     return () => {
@@ -84,6 +86,22 @@ const RegisterForm = ({ onSubmit }) => {
           />
         </Avatar>
         <div>
+          <label htmlFor="name">Full name</label>
+          <div
+            className={`border border-solid rounded-md p-2 ${
+              errors.name && `border-red-500`
+            }`}
+          >
+            <input
+              {...register("name")}
+              name="name"
+              className="w-full outline-none"
+              placeholder="Enter your name"
+            />
+          </div>
+          {errors.name && <p className="text-red-400">{errors.name.message}</p>}
+        </div>
+        <div>
           <label htmlFor="email">Email</label>
           <div
             className={`border border-solid rounded-md p-2 ${
@@ -113,7 +131,12 @@ const RegisterForm = ({ onSubmit }) => {
               name="username"
               className="w-full outline-none"
               placeholder="Choose your username"
-              onFocus={() => setValue("username", "")}
+              onFocus={() =>
+                setValue(
+                  "username",
+                  watchEmail ? watchEmail.split("@").shift() : ""
+                )
+              }
             />
           </div>
           {errors.username && (

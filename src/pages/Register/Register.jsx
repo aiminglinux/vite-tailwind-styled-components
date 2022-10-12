@@ -1,9 +1,16 @@
 import tw from "twin.macro";
 import RegisterForm from "./components/RegisterForm";
+import { useSignUpMutation } from "../../core/features/auth/authApiSlice";
 
 function Register() {
-  const handleRegisterFormSubmit = (values) => {
+  const [signUp, { isLoading, isError }] = useSignUpMutation();
+  const handleRegisterFormSubmit = async (values) => {
     console.log("Register data: ", values);
+    // try {
+    //   await signUp(values);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
