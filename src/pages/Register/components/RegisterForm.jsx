@@ -1,11 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import tw, { styled } from "twin.macro";
 import * as yup from "yup";
 
 import Button from "../../../components/Button/Button";
+import useBase64 from "../../../hooks/useBase64";
 
 const RegisterSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -20,8 +21,13 @@ const RegisterSchema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Password mismatch"),
 });
 
+const imgURL =
+  "https://res.cloudinary.com/drkdy5tsq/image/upload/v1663835541/default/default-avatar_sbpczw.png";
+
 const RegisterForm = ({ onSubmit }) => {
-  const [avatar, setAvatar] = useState();
+  const avatarRef = useRef(null);
+  const [avatar, setAvatar] = useState(imgURL);
+  const picture = useBase64(avatar);
   const {
     register,
     setValue,
@@ -34,14 +40,8 @@ const RegisterForm = ({ onSubmit }) => {
   });
 
   const handleFormSubmit = (values) => {
-    console.log(avatar);
-    // if (!avatar) {
-    //   const { name, email, username, password } = values;
-    //   onSubmit({ name, email, username, password });
-    //   return;
-    // }
-    // values.picture = avatar.preview;
-    onSubmit(values);
+    const { name, email, username, password, picture: avatar } = values;
+    onSubmit({ name, email, username, password, picture });
   };
 
   const watchEmail = watch("email", false);
@@ -54,42 +54,31 @@ const RegisterForm = ({ onSubmit }) => {
     !errors.password2 &&
     watchEmail;
 
-  const imgURL =
-    "https://res.cloudinary.com/drkdy5tsq/image/upload/v1663835541/default/default-avatar_sbpczw.png";
-
-  useEffect(() => {
-    return () => {
-      avatar && URL.revokeObjectURL(avatar.preview);
-    };
-  }, [avatar]);
-
   const onSelectFile = (e) => {
-    const file = e.target.files[0];
-
-    file.preview = URL.createObjectURL(file);
-
-    setAvatar(file);
+    setAvatar(e.target.files[0]);
   };
 
   return (
     <Fragment>
       <Wrapper onSubmit={handleSubmit(handleFormSubmit)}>
         <Avatar>
-          <img src={avatar ? avatar.preview : imgURL} alt="default-avatar" />
-          <label htmlFor="avatar-upload">Upload your avatar</label>
+          <img src={picture.toString() ?? imgURL} alt="avatar" />
+          <Button onClick={() => avatarRef.current.click()}>
+            Upload your avatar
+          </Button>
           <input
             {...register("avatar")}
-            id="avatar-upload"
             type="file"
             name="avatar"
             onChange={onSelectFile}
+            ref={avatarRef}
           />
         </Avatar>
         <div>
           <label htmlFor="name">Full name</label>
           <div
             className={`border border-solid rounded-md p-2 ${
-              errors.name && `border-red-500`
+              errors.name ? `border-red-500` : ""
             }`}
           >
             <input
@@ -105,7 +94,7 @@ const RegisterForm = ({ onSubmit }) => {
           <label htmlFor="email">Email</label>
           <div
             className={`border border-solid rounded-md p-2 ${
-              errors.email && `border-red-500`
+              errors.email ? `border-red-500` : ""
             }`}
           >
             <input
@@ -123,7 +112,7 @@ const RegisterForm = ({ onSubmit }) => {
           <label htmlFor="username">Username</label>
           <div
             className={`border border-solid rounded-md p-2 ${
-              errors.username && `border-red-500`
+              errors.username ? `border-red-500` : ""
             }`}
           >
             <input
@@ -147,7 +136,7 @@ const RegisterForm = ({ onSubmit }) => {
           <label htmlFor="password">Password</label>
           <div
             className={`border border-solid rounded-md p-2 ${
-              errors.email && `border-red-500`
+              errors.email ? `border-red-500` : ""
             }`}
           >
             <input
@@ -166,7 +155,7 @@ const RegisterForm = ({ onSubmit }) => {
           <label htmlFor="password2">Re-type Password</label>
           <div
             className={`border border-solid rounded-md p-2 ${
-              errors.email && `border-red-500`
+              errors.email ? `border-red-500` : ""
             }`}
           >
             <input

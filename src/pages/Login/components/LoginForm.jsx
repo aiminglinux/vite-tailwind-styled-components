@@ -75,6 +75,7 @@ const LoginForm = ({ onSubmit }) => {
         <Button disabled={!isValid} isFull hasBg type="submit">
           Log in
         </Button>
+
         <div className="relative after:absolute after:content-[''] after:w-full after:border after:left-0 after:top-[50%]">
           <span className="z-50 inline-block bg-white relative text-center mx-auto ml-[50%] translate-x-[-50%] px-2">
             Don't have an account? <Register to="/login">Register</Register>

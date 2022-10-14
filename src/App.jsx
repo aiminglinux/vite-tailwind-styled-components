@@ -1,6 +1,6 @@
 import { Fragment } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 
 // Store:
 import { PersistGate } from "redux-persist/integration/react";
