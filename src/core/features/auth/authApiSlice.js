@@ -22,7 +22,16 @@ const authApiSlice = apiSlice.injectEndpoints({
         body: { ...userCredentials },
       }),
     }),
+    login: builder.mutation({
+      query: (userCredentials) => ({
+        url: "auth",
+        method: "POST",
+        body: { ...userCredentials },
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
-export const { useLazyLogoutQuery, useSignUpMutation } = authApiSlice;
+export const { useLazyLogoutQuery, useSignUpMutation, useLoginMutation } =
+  authApiSlice;

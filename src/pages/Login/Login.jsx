@@ -1,9 +1,60 @@
 import tw from "twin.macro";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../../core/features/auth/authApiSlice";
+import { setCredentials, setToken } from "../../core/features/auth/authSlice";
+
 import LoginForm from "./components/LoginForm";
+import { useEffect } from "react";
 
 function Login() {
-  const handleLoginFormSubmit = (values) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading, isSuccess, isError, reset }] = useLoginMutation();
+
+  useEffect(() => {
+    reset();
+    isSuccess && navigate("/");
+  }, [isSuccess]);
+
+  const handleLoginFormSubmit = async (values) => {
     console.log("Login data: ", values);
+    const { email, password } = values;
+    try {
+      const {
+        id,
+        name,
+        username,
+        picture,
+        bio,
+        location,
+        education,
+        work,
+        availableFor,
+        skills,
+        createdAt,
+        token,
+      } = await login({ email, password }).unwrap();
+      dispatch(
+        setCredentials({
+          id,
+          name,
+          username,
+          email,
+          picture,
+          bio,
+          location,
+          education,
+          work,
+          availableFor,
+          skills,
+          createdAt,
+        })
+      );
+      dispatch(setToken(token));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

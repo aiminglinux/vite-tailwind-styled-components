@@ -51,8 +51,7 @@ const RegisterForm = ({ onSubmit }) => {
     !errors.password &&
     !errors.password &&
     !errors.username &&
-    !errors.password2 &&
-    watchEmail;
+    !errors.password2;
 
   const onSelectFile = (e) => {
     setAvatar(e.target.files[0]);
