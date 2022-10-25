@@ -14,15 +14,19 @@ i::before,
 i::after {
   transition: initial;
 }
+:root {
+  --navbar-height: 57px;
+}
 html {
   scroll-behavior: smooth;
 }
 body {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--navbar-height));
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   background: ${theme`colors.gray.100`};
-  position: relative; // For the footer
+  position: relative; // For the footer;
+  overflow-y: scroll
 }
 body,
 h1,

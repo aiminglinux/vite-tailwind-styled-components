@@ -1,21 +1,27 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import tw, { styled, theme } from "twin.macro";
 
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
+import useRequireAuthen from "../../hooks/useRequireAuthen";
+
 import {
+  AiOutlineBell,
+  AiOutlineCode,
   AiOutlineMenuFold,
   AiOutlineSearch,
-  AiOutlineCode,
-  AiOutlineBell,
 } from "react-icons/ai";
 
 import useBreakpoint from "../../hooks/useBreakpoint";
 import useToggle from "../../hooks/useToggle";
 
+import { Fragment, useEffect, useRef } from "react";
 import Button from "../../components/Button/Button";
 import MobileMenu from "./components/MobileMenu";
-import { useEffect, useRef } from "react";
 
 function Navbar() {
+  const currentUser = useSelector(selectCurrentUser);
+  const { isAuthed } = useRequireAuthen();
   const navBarRef = useRef(null);
   const isMobile = useBreakpoint(theme`screens.md`.replace("px", ""));
   const [mobileMenu, toggleMobileMenu] = useToggle(false);
@@ -54,70 +60,77 @@ function Navbar() {
           </SearchButton>
         </SearchBar>
 
-        {!isMobile && (
-          <RightSide>
-            <div>
-              <Button>Create Post</Button>
-            </div>
-
-            <Link to="#!" className="relative hover:bg-blue-200 p-1 rounded-md">
-              <AiOutlineBell size={32} />
-              <div className="absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full">
-                <small className="text-lg">3</small>
+        <RightSide>
+          {isAuthed ? (
+            <Fragment>
+              <div>
+                <Button>Create Post</Button>
               </div>
-            </Link>
 
-            <div>
-              <Avatar
-                id="avatar"
-                src="http://res.cloudinary.com/drkdy5tsq/image/upload/v1665634943/Profiles/ep8km7ckf3donawg7jze.jpg"
-                onClick={toggleProfileMenu}
-              />
-            </div>
-            {profileMenu && (
-              <ProfileMenu onClick={toggleProfileMenu}>
-                <MenuList>
-                  <MenuItem>
-                    <Link to="profile">
-                      <div>
-                        <span className="block">freeman</span>
-                        <small>@freeman</small>
-                      </div>
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to="dashboard">Dashboard</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to="create-post">Create Post</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to="reading-list">Reading List</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to="edit-profile">Settings</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link to="#!">Log Out</Link>
-                  </MenuItem>
-                </MenuList>
-              </ProfileMenu>
-            )}
+              <Link
+                to="#!"
+                className="relative hover:bg-blue-200 p-1 rounded-md"
+              >
+                <AiOutlineBell size={32} />
+                <div className="absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full">
+                  <small className="text-lg">3</small>
+                </div>
+              </Link>
 
-            {/* <Link to="login">
-              <Button isText>Log in</Button>
-            </Link>
-            <Link to="register">
-              <Button>Create account</Button>
-            </Link> */}
-          </RightSide>
-        )}
+              <div>
+                <Avatar
+                  id="avatar"
+                  src={currentUser.picture.url}
+                  onClick={toggleProfileMenu}
+                />
+              </div>
+              {profileMenu && (
+                <ProfileMenu onClick={toggleProfileMenu}>
+                  <MenuList>
+                    <MenuItem>
+                      <Link to="profile">
+                        <div>
+                          <span className="block">{currentUser.name}</span>
+                          <small>@{currentUser.username}</small>
+                        </div>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="dashboard">Dashboard</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="create-post">Create Post</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="reading-list">Reading List</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="edit-profile">Settings</Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link to="auth/confirm/logout">Log Out</Link>
+                    </MenuItem>
+                  </MenuList>
+                </ProfileMenu>
+              )}
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Link to="auth/login">
+                <Button isText>Log in</Button>
+              </Link>
+              <Link to="auth/register">
+                <Button>Create account</Button>
+              </Link>
+            </Fragment>
+          )}
+        </RightSide>
       </Inner>
     </Wrapper>
   );
 }
-const Wrapper = tw.nav`w-full h-14 bg-white fixed left-0 top-0 z-30 shadow`;
-const Inner = tw.div`max-w-screen-xl h-full mx-auto flex justify-between items-center px-4`;
+const Wrapper = tw.nav`w-full items-center flex mx-auto w-full h-14 bg-white fixed left-0 top-0 z-30 shadow`;
+const Inner = tw.div`h-full w-full max-w-screen-xl mx-auto flex justify-between items-center px-4`;
 const LeftSide = tw.div`flex `;
 const MobMenu = styled.div`
   > svg {

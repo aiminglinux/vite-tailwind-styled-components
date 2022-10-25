@@ -8,12 +8,12 @@ function PostList() {
       {/* <div>{isLoading && <Skeleton />}</div> */}
       <Post />
       <Post />
+      {/* <Post /> */}
+      {/* <Post />
       <Post />
       <Post />
       <Post />
-      <Post />
-      <Post />
-      <Post />
+      <Post /> */}
     </div>
   );
 }

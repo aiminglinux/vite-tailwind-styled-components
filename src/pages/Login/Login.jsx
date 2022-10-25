@@ -18,7 +18,6 @@ function Login() {
   }, [isSuccess]);
 
   const handleLoginFormSubmit = async (values) => {
-    console.log("Login data: ", values);
     const { email, password } = values;
     try {
       const {
@@ -33,7 +32,7 @@ function Login() {
         availableFor,
         skills,
         createdAt,
-        token,
+        accessToken,
       } = await login({ email, password }).unwrap();
       dispatch(
         setCredentials({
@@ -51,7 +50,7 @@ function Login() {
           createdAt,
         })
       );
-      dispatch(setToken(token));
+      dispatch(setToken(accessToken));
     } catch (error) {
       console.log(error);
     }

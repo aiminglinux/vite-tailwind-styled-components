@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import DefaultLayout from "../Layouts/DefaultLayout/DefaultLayout";
 import Home from "../Layouts/Home/Home";
+import Confirmation from "../pages/Confirmation/Confirmation";
 import CreatePost from "../pages/CreatePost/CreatePost";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import EditProfile from "../pages/EditProfile/EditProfile";
@@ -14,8 +15,11 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<DefaultLayout />}>
         <Route index element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="auth">
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="confirm/:confirmType" element={<Confirmation />} />
+        </Route>
         <Route path="profile" element={<Profile />} />
         <Route path="create-post" element={<CreatePost />} />
         <Route path="dashboard" element={<Dashboard />} />
