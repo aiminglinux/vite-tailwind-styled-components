@@ -63,9 +63,9 @@ function Navbar() {
         <RightSide>
           {isAuthed ? (
             <Fragment>
-              <div>
+              <Link to="create-post">
                 <Button>Create Post</Button>
-              </div>
+              </Link>
 
               <Link
                 to="#!"

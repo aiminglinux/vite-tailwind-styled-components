@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import tw, { styled } from "twin.macro";
+import useRequireAuthen from "../../hooks/useRequireAuthen";
+
 import Button from "../Button/Button";
 import {
   AiOutlineHome,
@@ -10,24 +12,27 @@ import {
 } from "react-icons/ai";
 
 const NavMenu = () => {
+  const { isAuthed } = useRequireAuthen();
   return (
     <Wrapper>
-      <Community>
-        <CompHeading>
-          <span>My Community</span> is the site just for learning Frontend
-          technologies as HTML/CSS, ReactJS and NodeJS
-        </CompHeading>
-        <Auth>
-          <Register>
-            <Button isFull> Create account</Button>
-          </Register>
-          <Login>
-            <Button isText isFull>
-              Log in
-            </Button>
-          </Login>
-        </Auth>
-      </Community>
+      {!isAuthed && (
+        <Community>
+          <CompHeading>
+            <span>My Community</span> is the site just for learning Frontend
+            technologies as HTML/CSS, ReactJS and NodeJS
+          </CompHeading>
+          <Auth>
+            <Register>
+              <Button isFull> Create account</Button>
+            </Register>
+            <Login>
+              <Button isText isFull>
+                Log in
+              </Button>
+            </Login>
+          </Auth>
+        </Community>
+      )}
       <PublicLink>
         <Link to="/">
           <LinkWrapper>
@@ -64,10 +69,10 @@ const CompHeading = styled.h2`
   }
 `;
 const Login = styled(Link).attrs({
-  to: "login",
+  to: "auth/login",
 })``;
 const Register = styled(Link).attrs({
-  to: "register",
+  to: "auth/register",
 })`
   > button {
     ${tw`mb-2`}

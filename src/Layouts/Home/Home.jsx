@@ -1,7 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import tw from "twin.macro";
 
-import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
 import PostList from "../../components/PostList/PostList";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import RightSideBar from "../RightSideBar/RightSideBar";

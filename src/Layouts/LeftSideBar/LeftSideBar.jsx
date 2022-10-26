@@ -1,4 +1,5 @@
 import tw from "twin.macro";
+
 import NavMenu from "../../components/NavMenu/NavMenu";
 import Tags from "../../components/Tags/Tags";
 
