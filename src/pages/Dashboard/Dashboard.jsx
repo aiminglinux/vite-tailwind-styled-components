@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
 
@@ -6,7 +7,7 @@ const Dashboard = () => {
     <RouteWrapper>
       <div className="max-w-[1280px] mx-auto grid gap-4 grid-cols-[240px_1fr]">
         <main className="space-y-4 col-span-2">
-          <header className="block">
+          <header className="">
             <h1 className="text-3xl font-semibold">Dashboard</h1>
           </header>
           <div className="grid grid-cols-4 gap-2">
@@ -71,9 +72,9 @@ const Dashboard = () => {
                 This is where you can manage your posts, but you haven't written
                 anything yet.
               </p>
-              <p>
+              <Link to="/create-post">
                 <Button hasBg>Write your first post now</Button>
-              </p>
+              </Link>
             </div>
           </div>
         </section>

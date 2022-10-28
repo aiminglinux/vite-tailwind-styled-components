@@ -105,7 +105,7 @@ function Navbar() {
                       <Link to="reading-list">Reading List</Link>
                     </MenuItem>
                     <MenuItem>
-                      <Link to="edit-profile">Settings</Link>
+                      <Link to="settings">Settings</Link>
                     </MenuItem>
                     <MenuItem>
                       <Link to="auth/confirm/logout">Log Out</Link>
