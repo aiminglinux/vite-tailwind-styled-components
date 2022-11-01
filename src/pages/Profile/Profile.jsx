@@ -5,6 +5,7 @@ import { FaBirthdayCake } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 
 import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   return (
@@ -21,7 +22,9 @@ const Profile = () => {
                 />
               </span>
               <div className="flex items-center justify-end space-x-2 -mt-8 px-4">
-                <Button hasBg>Edit Profile</Button>
+                <Link to="/settings">
+                  <Button hasBg>Edit Profile</Button>
+                </Link>
                 <div className="p-2 hover:bg-gray-200 hover:rounded-md">
                   <BsThreeDots size={24} />
                 </div>

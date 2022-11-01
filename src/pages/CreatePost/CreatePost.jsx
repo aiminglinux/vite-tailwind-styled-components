@@ -39,7 +39,7 @@ const CreatePost = () => {
   const handleSpacebarPress = (e) => {
     if (e.target.value.trim().length === 0) return;
     if (e.keyCode === 32) {
-      setTags([...tags, e.target.value]);
+      setTags([...tags, e.target.value.trim()]);
       reset({
         tag: "",
       });

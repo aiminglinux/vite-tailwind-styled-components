@@ -10,7 +10,8 @@ import { useEffect } from "react";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [login, { isLoading, isSuccess, isError, reset }] = useLoginMutation();
+  const [login, { isLoading, isSuccess, isError, reset, error }] =
+    useLoginMutation();
 
   useEffect(() => {
     reset();
@@ -21,7 +22,7 @@ function Login() {
     const { email, password } = values;
     try {
       const {
-        id,
+        _id: id,
         name,
         username,
         picture,
@@ -59,6 +60,16 @@ function Login() {
   return (
     <Wrapper>
       <Inner>
+        {isError && (
+          <div className="bg-red-200 rounded-md p-4">
+            <h1 className="text-red-400 font-bold text-2xl">
+              Hey, something went wrong:
+            </h1>
+            <ul className="text-lg">
+              <li>&gt;&gt; {error?.data?.message}</li>
+            </ul>
+          </div>
+        )}
         <div className="text-center space-y-2">
           <h1 className="font-bold text-4xl">Welcome to my community</h1>
           <p>
