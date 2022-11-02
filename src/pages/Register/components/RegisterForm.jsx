@@ -1,12 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import tw, { styled } from "twin.macro";
 import * as yup from "yup";
 
 import Button from "../../../components/Button/Button";
+
 import useBase64 from "../../../hooks/useBase64";
+import useRequireAuthen from "../../../hooks/useRequireAuthen";
+
+import defaultAvatar from "../../../assets/images/default-avatar.png";
 
 const RegisterSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -21,13 +25,16 @@ const RegisterSchema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Password mismatch"),
 });
 
-const imgURL =
-  "https://res.cloudinary.com/drkdy5tsq/image/upload/v1663835541/default/default-avatar_sbpczw.png";
-
 const RegisterForm = ({ onSubmit }) => {
-  const avatarRef = useRef(null);
-  const [avatar, setAvatar] = useState(imgURL);
+  const { isAuthed } = useRequireAuthen();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthed) navigate("/");
+  }, []);
+
+  const [avatar, setAvatar] = useState(defaultAvatar);
   const picture = useBase64(avatar);
+
   const {
     register,
     setValue,
@@ -54,6 +61,7 @@ const RegisterForm = ({ onSubmit }) => {
     !errors.password2;
 
   const onSelectFile = (e) => {
+    e.preventDefault();
     setAvatar(e.target.files[0]);
   };
 
@@ -62,15 +70,14 @@ const RegisterForm = ({ onSubmit }) => {
       <Wrapper onSubmit={handleSubmit(handleFormSubmit)}>
         <Avatar>
           <img src={picture.toString() ?? imgURL} alt="avatar" />
-          <Button onClick={() => avatarRef.current.click()}>
-            Upload your avatar
-          </Button>
+          <label htmlFor="avatar">Upload your avatar</label>
           <input
             {...register("avatar")}
             type="file"
             name="avatar"
+            id="avatar"
             onChange={onSelectFile}
-            ref={avatarRef}
+            // ref={avatarRef}
           />
         </Avatar>
         <div>
@@ -83,6 +90,7 @@ const RegisterForm = ({ onSubmit }) => {
             <input
               {...register("name")}
               name="name"
+              id="name"
               className="w-full outline-none"
               placeholder="Enter your name"
             />
@@ -189,7 +197,7 @@ const Avatar = styled.div`
     ${tw`w-32 h-32 rounded-full border object-cover`}
   }
   > label {
-    ${tw`border p-1 rounded-md`}
+    ${tw`border py-1 px-2 rounded-md select-none`}
   }
   > input {
     ${tw`hidden`}

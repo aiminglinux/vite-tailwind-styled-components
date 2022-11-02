@@ -7,11 +7,16 @@ import { useUpdateUserMutation } from "../../../core/features/users/usersApiSlic
 
 import useRequireAuthen from "../../../hooks/useRequireAuthen";
 
+import { useState } from "react";
 import Button from "../../../components/Button/Button";
+
 import useCouter from "../../../hooks/useCouter";
+import useBase64 from "../../../hooks/useBase64";
 
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
+  const [file, setFile] = useState(currentUser.picture?.url);
+  const previewAvatar = useBase64(file);
   const { isAuthed, handleAuth } = useRequireAuthen();
   const navigate = useNavigate();
 
@@ -32,27 +37,42 @@ const UserProfile = () => {
   } = useForm();
 
   const { id } = currentUser;
-  const handleFormSubmit = async (value) => {
-    console.log(value);
-    // const {
-    //   name,
-    //   email,
-    //   username,
-    //   bio,
-    //   location,
-    //   education,
-    //   work,
-    //   availableFor,
-    //   skills,
-    // } = value;
+  const handleFormSubmit = async (data) => {
+    const {
+      name,
+      email,
+      username,
+      bio,
+      location,
+      education,
+      work,
+      availableFor,
+      skills,
+    } = data;
 
-    // if (isAuthed) {
-    //   try {
-    //     await updateUser({ bio, id }).unwrap();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // } else handleAuth();
+    if (isAuthed) {
+      try {
+        await updateUser({
+          name,
+          email,
+          username,
+          bio,
+          picture: {
+            url: previewAvatar,
+            publicId: currentUser.picture.publicId,
+          },
+          location,
+          education,
+          work,
+          availableFor,
+          skills,
+          id,
+        }).unwrap();
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
+    } else handleAuth();
   };
 
   return (
@@ -94,13 +114,14 @@ const UserProfile = () => {
           <div className="flex space-x-2">
             <img
               className="rounded-full inline-block w-12 h-12"
-              src={currentUser.picture.url}
-              alt="profile-img"
+              src={previewAvatar.toString()}
+              alt="Pick your avatar"
             />
 
             <input
-              {...register("profile-img")}
-              name="profile-img"
+              {...register("files")}
+              onChange={(e) => setFile(e.target.files[0])}
+              name="files"
               type="file"
               className="w-full border border-solid p-2 rounded-md border-gray-300 cursor-text"
             />

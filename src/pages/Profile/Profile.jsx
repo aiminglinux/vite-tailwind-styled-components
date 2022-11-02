@@ -1,13 +1,17 @@
 import tw, { styled } from "twin.macro";
-import Button from "../../components/Button/Button";
 import { MdLocationPin } from "react-icons/md";
 import { FaBirthdayCake } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
-
-import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
+
+import Button from "../../components/Button/Button";
+import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
 
 const Profile = () => {
+  const currentUser = useSelector(selectCurrentUser);
   return (
     <RouteWrapper>
       <Wrapper>
@@ -25,19 +29,25 @@ const Profile = () => {
                 <Link to="/settings">
                   <Button hasBg>Edit Profile</Button>
                 </Link>
-                <div className="p-2 hover:bg-gray-200 hover:rounded-md">
+                {/* <div className="p-2 hover:bg-gray-200 hover:rounded-md">
                   <BsThreeDots size={24} />
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="p-4 text-center space-y-4">
-              <h1 className="text-4xl font-semibold">Fredy Andrei</h1>
-              <p>Founder of Simmmple | simmmple.com</p>
+              <h1 className="text-4xl font-semibold">{currentUser.name}</h1>
+              {currentUser.bio ? (
+                <p>{currentUser.bio}</p>
+              ) : (
+                <p>404 bio not found</p>
+              )}
               <div className="flex space-x-4 items-center mx-auto justify-center text-gray-400">
-                <span className="flex space-x-1 items-center">
-                  <MdLocationPin />
-                  <span>Bucharest, Romania</span>
-                </span>
+                {currentUser.location && (
+                  <span className="flex space-x-1 items-center">
+                    <MdLocationPin />
+                    <span>Bucharest, Romania</span>
+                  </span>
+                )}
                 <span className="flex space-x-1 items-center">
                   <FaBirthdayCake />
                   <span>Joined on Apr 7, 2021</span>
