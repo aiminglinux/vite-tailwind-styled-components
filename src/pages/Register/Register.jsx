@@ -13,7 +13,7 @@ function Register() {
   const handleRegisterFormSubmit = async (values) => {
     try {
       await signUp(values).unwrap();
-      navigate("auth/login");
+      navigate("/auth/login");
     } catch (error) {
       console.log(error);
     }

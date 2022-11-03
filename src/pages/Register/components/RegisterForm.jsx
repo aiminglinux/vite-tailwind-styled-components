@@ -10,7 +10,8 @@ import Button from "../../../components/Button/Button";
 import useBase64 from "../../../hooks/useBase64";
 import useRequireAuthen from "../../../hooks/useRequireAuthen";
 
-import defaultAvatar from "../../../assets/images/default-avatar.png";
+const imgURL =
+  "https://res.cloudinary.com/drkdy5tsq/image/upload/v1667377715/pictures/ozsecjhumcsakyxixo7b.png";
 
 const RegisterSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -32,7 +33,7 @@ const RegisterForm = ({ onSubmit }) => {
     if (isAuthed) navigate("/");
   }, []);
 
-  const [avatar, setAvatar] = useState(defaultAvatar);
+  const [avatar, setAvatar] = useState();
   const picture = useBase64(avatar);
 
   const {
@@ -47,6 +48,7 @@ const RegisterForm = ({ onSubmit }) => {
   });
 
   const handleFormSubmit = (values) => {
+    console.log(values);
     const { name, email, username, password, picture: avatar } = values;
     onSubmit({ name, email, username, password, picture });
   };

@@ -88,7 +88,7 @@ const LoginForm = ({ onSubmit }) => {
 const Wrapper = tw.form`space-y-4`;
 
 const Register = styled(Link).attrs({
-  to: "/Register",
+  to: "/auth/register",
 })`
   ${tw`text-blue-500`}
 `;

@@ -40,6 +40,9 @@ function Login() {
         skills,
         createdAt,
         accessToken,
+        website,
+        current,
+        learning,
       } = await login({ email, password }).unwrap();
       dispatch(
         setCredentials({
@@ -55,6 +58,9 @@ function Login() {
           availableFor,
           skills,
           createdAt,
+          website,
+          current,
+          learning,
         })
       );
       dispatch(setToken(accessToken));

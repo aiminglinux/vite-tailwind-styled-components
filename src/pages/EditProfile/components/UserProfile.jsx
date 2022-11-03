@@ -1,17 +1,54 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
 import { selectCurrentUser } from "../../../core/features/auth/authSlice";
 import { useUpdateUserMutation } from "../../../core/features/users/usersApiSlice";
 
 import useRequireAuthen from "../../../hooks/useRequireAuthen";
-
-import { useState } from "react";
 import Button from "../../../components/Button/Button";
+import defaultAvatar from "../../../assets/images/default-avatar.png";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 
-import useCouter from "../../../hooks/useCouter";
 import useBase64 from "../../../hooks/useBase64";
+import useCouter from "../../../hooks/useCouter";
+
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+
+const profileSchema = yup.object().shape({
+  name: yup.string().trim(),
+  email: yup.string().email("Please input a valid email address"),
+  username: yup
+    .string()
+    .matches(/^\S*$/, "Whitespace is not allowed in your username"),
+  files: yup
+    .mixed()
+    .test("type", "Allowed file types: jpg, .png, .jpeg", (file) => {
+      if (file.length) {
+        return file && file[0] && SUPPORTED_FORMATS.includes(file[0].type);
+      } else {
+        return true;
+      }
+    }),
+  website: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      {
+        message: "Invalid URL",
+        excludeEmptyString: true,
+      }
+    ),
+  location: yup.string().trim(),
+  bio: yup.string().trim(),
+  learning: yup.string().trim(),
+  skills: yup.string().trim(),
+  current: yup.string().trim(),
+  available: yup.string().trim(),
+});
 
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -34,10 +71,15 @@ const UserProfile = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    // mode: "onBlur",
+    reValidateMode: "onBlur",
+    resolver: yupResolver(profileSchema),
+  });
 
   const { id } = currentUser;
   const handleFormSubmit = async (data) => {
+    console.log(data);
     const {
       name,
       email,
@@ -76,219 +118,258 @@ const UserProfile = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="mb-16 space-y-2">
-      <div className="bg-white w-full p-4 rounded-md grid gap-4">
-        <h2 className="text-4xl font-semibold">User</h2>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="name">Name</label>
-          <input
-            {...register("name")}
-            defaultValue={currentUser.name}
-            name="name"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-          />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="email">Email</label>
-          <input
-            {...register("email")}
-            defaultValue={currentUser.email}
-            name="email"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-          />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="username">Username</label>
-          <input
-            {...register("username")}
-            defaultValue={currentUser.username}
-            name="username"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-          />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="profile-img">Profile image</label>
-          <div className="flex space-x-2">
-            <img
-              className="rounded-full inline-block w-12 h-12"
-              src={previewAvatar.toString()}
-              alt="Pick your avatar"
-            />
+    <Fragment>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="mb-16 space-y-2"
+        >
+          <div className="bg-white w-full p-4 rounded-md grid gap-4">
+            <h2 className="text-4xl font-semibold">User</h2>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="name">Name</label>
+              <input
+                {...register("name")}
+                defaultValue={currentUser.name}
+                name="name"
+                type="text"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="email">Email</label>
+              <input
+                // {...register("email")}
+                defaultValue={currentUser.email}
+                name="email"
+                type="text"
+                disabled
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+              />
+              {errors.email && (
+                <p className="text-red-400">{errors.email.message}</p>
+              )}
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="username">Username</label>
+              <input
+                // {...register("username")}
+                defaultValue={currentUser.username}
+                name="username"
+                id="username"
+                disabled
+                type="text"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+              />
+              {errors.username && (
+                <p className="text-red-400">{errors.username.message}</p>
+              )}
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="profile-img">Profile image</label>
+              <div className="flex space-x-2">
+                <img
+                  className="rounded-full inline-block w-12 h-12"
+                  src={errors.files ? defaultAvatar : previewAvatar.toString()}
+                  alt="Pick your avatar"
+                />
 
-            <input
-              {...register("files")}
-              onChange={(e) => setFile(e.target.files[0])}
-              name="files"
-              type="file"
-              className="w-full border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            />
+                <input
+                  {...register("files")}
+                  onChange={(e) => setFile(e.target.files[0])}
+                  name="files"
+                  type="file"
+                  className="w-full border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                />
+              </div>
+              {errors.files && (
+                <p className="text-red-400">{errors.files.message}</p>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="bg-white w-full p-4 rounded-md grid gap-4">
-        <h2 className="text-4xl font-semibold">Basic</h2>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="website">Website URL</label>
-          <input
-            {...register("website")}
-            defaultValue={currentUser.website}
-            maxLength={100}
-            name="website"
-            type="text"
-            placeholder="https://yoursite.com"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => websiteCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{websiteCount.count}</span>
-            /100
-          </p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="location">Location</label>
-          <input
-            {...register("location")}
-            defaultValue={currentUser.location}
-            maxLength={100}
-            name="location"
-            type="text"
-            placeholder="HCMC, Vietnam"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => locationCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{locationCount.count}</span>
-            /100
-          </p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="bio">Bio</label>
-          <textarea
-            {...register("bio")}
-            defaultValue={currentUser.bio}
-            maxLength={200}
-            name="bio"
-            type="text"
-            placeholder="A short bio..."
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => bioCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{bioCount.count}</span>
-            /200
-          </p>
-        </div>
-      </div>
-      <div className="bg-white w-full p-4 rounded-md grid gap-4">
-        <h2 className="text-4xl font-semibold">Coding</h2>
+          <div className="bg-white w-full p-4 rounded-md grid gap-4">
+            <h2 className="text-4xl font-semibold">Basic</h2>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="website">Website URL</label>
+              <input
+                {...register("website")}
+                defaultValue={currentUser.website}
+                maxLength={100}
+                name="website"
+                type="text"
+                id="website"
+                placeholder="https://yoursite.com"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => websiteCount.increment(e.target.value.length)}
+              />
+              {errors.website && (
+                <p className="text-red-400">{errors.website.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{websiteCount.count}</span>
+                /100
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="location">Location</label>
+              <input
+                {...register("location")}
+                defaultValue={currentUser.location}
+                maxLength={100}
+                name="location"
+                type="text"
+                placeholder="HCMC, Vietnam"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => locationCount.increment(e.target.value.length)}
+              />
+              {errors.location && (
+                <p className="text-red-400">{errors.location.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{locationCount.count}</span>
+                /100
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="bio">Bio</label>
+              <textarea
+                {...register("bio")}
+                defaultValue={currentUser.bio}
+                maxLength={200}
+                name="bio"
+                id="bio"
+                type="text"
+                placeholder="A short bio..."
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => bioCount.increment(e.target.value.length)}
+              />
+              {errors.bio && (
+                <p className="text-red-400">{errors.bio.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{bioCount.count}</span>
+                /200
+              </p>
+            </div>
+          </div>
+          <div className="bg-white w-full p-4 rounded-md grid gap-4">
+            <h2 className="text-4xl font-semibold">Coding</h2>
 
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="learning">
-            Currently learning
-            <p className="text-sm text-gray-400">
-              What are you learning right now? What are the new tools and
-              languages you're picking up right now?
-            </p>
-          </label>
-          <textarea
-            {...register("learning")}
-            defaultValue={currentUser.learning}
-            cols={1}
-            rows={2}
-            maxLength={200}
-            name="learning"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => learningCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{learningCount.count}</span>
-            /200
-          </p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="skills">
-            Skills/Languages
-            <p className="text-sm text-gray-400">
-              What tools and languages are you most experienced with? Are you
-              specialized or more of a generalist?
-            </p>
-          </label>
-          <textarea
-            {...register("skills")}
-            defaultValue={currentUser.skills}
-            cols={1}
-            rows={2}
-            maxLength={200}
-            name="skills"
-            type="text"
-            placeholder="Any languagues, framworks, etc. to hightlight?"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => skillsCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{skillsCount.count}</span>
-            /200
-          </p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="current">
-            Currently working on
-            <p className="text-sm text-gray-400">
-              What projects are currently occupying most of your time?
-            </p>
-          </label>
-          <textarea
-            {...register("current")}
-            defaultValue={currentUser.current}
-            cols={1}
-            rows={2}
-            maxLength={200}
-            name="current"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => currentCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{currentCount.count}</span>
-            /200
-          </p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <label htmlFor="available">
-            Available for
-            <p className="text-sm text-gray-400">
-              What kinds of collaborations or discussions are you available for?
-              What's a good reason to say Hey! to you these days?
-            </p>
-          </label>
-          <textarea
-            {...register("available")}
-            defaultValue={currentUser.avalable}
-            cols={1}
-            rows={2}
-            maxLength={200}
-            name="available"
-            type="text"
-            className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-            onChange={(e) => availableCount.increment(e.target.value.length)}
-          />
-          <p className="text-right text-sm text-gray-400">
-            <span>{availableCount.count}</span>
-            /200
-          </p>
-        </div>
-      </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="learning">
+                Currently learning
+                <p className="text-sm text-gray-400">
+                  What are you learning right now? What are the new tools and
+                  languages you're picking up right now?
+                </p>
+              </label>
+              <textarea
+                {...register("learning")}
+                defaultValue={currentUser.learning}
+                cols={1}
+                rows={2}
+                maxLength={200}
+                name="learning"
+                id="learning"
+                type="text"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => learningCount.increment(e.target.value.length)}
+              />
+              {errors.learning && (
+                <p className="text-red-400">{errors.learning.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{learningCount.count}</span>
+                /200
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="skills">
+                Skills/Languages
+                <p className="text-sm text-gray-400">
+                  learning: yup.string().trim(), What tools and languages are
+                  you most experienced with? Are you specialized or more of a
+                  generalist?
+                </p>
+              </label>
+              <textarea
+                {...register("skills")}
+                defaultValue={currentUser.skills}
+                cols={1}
+                rows={2}
+                maxLength={200}
+                name="skills"
+                type="text"
+                placeholder="Any languagues, framworks, etc. to hightlight?"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => skillsCount.increment(e.target.value.length)}
+              />
+              <p className="text-right text-sm text-gray-400">
+                <span>{skillsCount.count}</span>
+                /200
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="current">
+                Currently working on
+                <p className="text-sm text-gray-400">
+                  What projects are currently occupying most of your time?
+                </p>
+              </label>
+              <textarea
+                {...register("current")}
+                defaultValue={currentUser.current}
+                cols={1}
+                rows={2}
+                maxLength={200}
+                name="current"
+                type="text"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) => currentCount.increment(e.target.value.length)}
+              />
+              <p className="text-right text-sm text-gray-400">
+                <span>{currentCount.count}</span>
+                /200
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="available">
+                Available for
+                <p className="text-sm text-gray-400">
+                  What kinds of collaborations or discussions are you available
+                  for? What's a good reason to say Hey! to you these days?
+                </p>
+              </label>
+              <textarea
+                {...register("available")}
+                defaultValue={currentUser.avalable}
+                cols={1}
+                rows={2}
+                maxLength={200}
+                name="available"
+                type="text"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) =>
+                  availableCount.increment(e.target.value.length)
+                }
+              />
+              <p className="text-right text-sm text-gray-400">
+                <span>{availableCount.count}</span>
+                /200
+              </p>
+            </div>
+          </div>
 
-      <div className="bg-white w-full p-4 rounded-md grid gap-4">
-        <Button isFull hasBg>
-          Save Profile Information
-        </Button>
-      </div>
-    </form>
+          <div className="bg-white w-full p-4 rounded-md grid gap-4">
+            <Button isFull hasBg>
+              Save Profile Information
+            </Button>
+          </div>
+        </form>
+      )}
+    </Fragment>
   );
 };
 
