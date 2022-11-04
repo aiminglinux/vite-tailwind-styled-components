@@ -24,43 +24,44 @@ function Login() {
     isSuccess && navigate("/");
   }, [isSuccess]);
 
-  const handleLoginFormSubmit = async (values) => {
-    const { email, password } = values;
+  const handleLoginFormSubmit = async (data) => {
+    // const { email, password } = values;
     try {
       const {
         _id: id,
         name,
+        email,
         username,
         picture,
-        bio,
+        website,
         location,
-        education,
-        work,
-        availableFor,
+        bio,
+        learning,
         skills,
+        workingOn,
+        availableFor,
+        workingAt,
+        education,
         createdAt,
         accessToken,
-        website,
-        current,
-        learning,
-      } = await login({ email, password }).unwrap();
+      } = await login(data).unwrap();
       dispatch(
         setCredentials({
           id,
           name,
-          username,
           email,
+          username,
           picture,
-          bio,
-          location,
-          education,
-          work,
-          availableFor,
-          skills,
-          createdAt,
           website,
-          current,
+          location,
+          bio,
           learning,
+          skills,
+          workingOn,
+          availableFor,
+          workingAt,
+          education,
+          createdAt,
         })
       );
       dispatch(setToken(accessToken));

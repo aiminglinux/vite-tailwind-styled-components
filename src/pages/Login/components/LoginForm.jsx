@@ -8,7 +8,7 @@ import * as yup from "yup";
 import Button from "../../../components/Button/Button";
 
 const LoginSchema = yup.object().shape({
-  email: yup.string().email().required(),
+  email: yup.string().required(),
 
   password: yup.string().min(6).required(),
 });

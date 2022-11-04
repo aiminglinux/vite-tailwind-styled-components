@@ -9,6 +9,7 @@ import { selectCurrentUser } from "../../core/features/auth/authSlice";
 
 import Button from "../../components/Button/Button";
 import RouteWrapper from "../../components/RouteWrapper/RouteWrapper";
+import { formatDate } from "../../utils/string";
 
 const Profile = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -21,8 +22,8 @@ const Profile = () => {
               <span className="w-28 h-28 mx-auto items-center flex">
                 <img
                   className="w-32 rounded-full border-4 border-solid"
-                  src="http://res.cloudinary.com/drkdy5tsq/image/upload/v1665634943/Profiles/ep8km7ckf3donawg7jze.jpg"
-                  alt=""
+                  src={currentUser.picture?.url}
+                  alt={currentUser.name}
                 />
               </span>
               <div className="flex items-center justify-end space-x-2 -mt-8 px-4">
@@ -37,7 +38,7 @@ const Profile = () => {
             <div className="p-4 text-center space-y-4">
               <h1 className="text-4xl font-semibold">{currentUser.name}</h1>
               {currentUser.bio ? (
-                <p>{currentUser.bio}</p>
+                <p className="w-[70%] mx-auto">{currentUser.bio}</p>
               ) : (
                 <p>404 bio not found</p>
               )}
@@ -45,22 +46,28 @@ const Profile = () => {
                 {currentUser.location && (
                   <span className="flex space-x-1 items-center">
                     <MdLocationPin />
-                    <span>Bucharest, Romania</span>
+                    <span>{currentUser.location}</span>
                   </span>
                 )}
                 <span className="flex space-x-1 items-center">
                   <FaBirthdayCake />
-                  <span>Joined on Apr 7, 2021</span>
+                  <span>
+                    Joined on {formatDate(currentUser.createdAt, false)}
+                  </span>
                 </span>
               </div>
             </div>
-            <div className="flex justify-center border-t p-4">
+            <div className="flex justify-evenly border-t p-4">
               <div className="text-center">
                 <strong className="space-y-2">
                   <p className="text-xs text-gray-400">Work</p>
-                  <p className="text-lg font-normal">
-                    Founder & UI/UX Designer at Simmmple
-                  </p>
+                  <p className="text-lg font-normal">{currentUser.workingAt}</p>
+                </strong>
+              </div>
+              <div className="text-center">
+                <strong className="space-y-2">
+                  <p className="text-xs text-gray-400">Education</p>
+                  <p className="text-lg font-normal">{currentUser.education}</p>
                 </strong>
               </div>
             </div>

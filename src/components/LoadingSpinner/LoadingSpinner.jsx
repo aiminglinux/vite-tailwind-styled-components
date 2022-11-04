@@ -9,6 +9,6 @@ const LoadingSpinner = () => {
   );
 };
 
-const Wrapper = tw.div`w-full h-screen flex justify-center items-center`;
+const Wrapper = tw.div`w-full h-full flex justify-center items-center`;
 
 export default LoadingSpinner;

@@ -33,7 +33,7 @@ const RegisterForm = ({ onSubmit }) => {
     if (isAuthed) navigate("/");
   }, []);
 
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState(imgURL);
   const picture = useBase64(avatar);
 
   const {

@@ -46,8 +46,10 @@ const profileSchema = yup.object().shape({
   bio: yup.string().trim(),
   learning: yup.string().trim(),
   skills: yup.string().trim(),
-  current: yup.string().trim(),
-  available: yup.string().trim(),
+  workingOn: yup.string().trim(),
+  availableFor: yup.string().trim(),
+  workingAt: yup.string().trim(),
+  education: yup.string().trim(),
 });
 
 const UserProfile = () => {
@@ -59,19 +61,36 @@ const UserProfile = () => {
 
   const [updateUser, { isLoading, isError }] = useUpdateUserMutation();
 
-  const websiteCount = useCouter(0);
-  const locationCount = useCouter(0);
-  const bioCount = useCouter(0);
-  const learningCount = useCouter(0);
-  const skillsCount = useCouter(0);
-  const currentCount = useCouter(0);
-  const availableCount = useCouter(0);
+  const websiteCount = useCouter(currentUser.website?.length || 0);
+  const locationCount = useCouter(currentUser.location?.length || 0);
+  const bioCount = useCouter(currentUser.bio?.length || 0);
+  const learningCount = useCouter(currentUser.learning?.length || 0);
+  const skillsCount = useCouter(currentUser.skills?.length || 0);
+  const workingOnCount = useCouter(currentUser.workingOn?.length || 0);
+  const availableForCount = useCouter(currentUser.availableFor?.length || 0);
+  const workingAtCount = useCouter(currentUser.workingAt?.length || 0);
+  const educationCount = useCouter(currentUser.education?.length || 0);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
+    defaultValues: {
+      name: currentUser.name,
+      email: currentUser.email,
+      username: currentUser.username,
+      files: "",
+      website: currentUser.website,
+      location: currentUser.location,
+      bio: currentUser.bio,
+      education: currentUser.education,
+      workingAt: currentUser.workingAt,
+      workingOn: currentUser.workingOn,
+      availableFor: currentUser.availableFor,
+      learning: currentUser.learning,
+      skills: currentUser.skills,
+    },
     // mode: "onBlur",
     reValidateMode: "onBlur",
     resolver: yupResolver(profileSchema),
@@ -82,33 +101,35 @@ const UserProfile = () => {
     console.log(data);
     const {
       name,
-      email,
-      username,
       bio,
+      website,
       location,
       education,
-      work,
+      workingAt,
+      workingOn,
       availableFor,
+      learning,
       skills,
     } = data;
 
     if (isAuthed) {
       try {
         await updateUser({
+          id,
           name,
-          email,
-          username,
-          bio,
           picture: {
             url: previewAvatar,
-            publicId: currentUser.picture.publicId,
+            publicId: currentUser.picture?.publicId,
           },
+          website,
           location,
-          education,
-          work,
-          availableFor,
+          bio,
+          learning,
           skills,
-          id,
+          workingOn,
+          availableFor,
+          workingAt,
+          education,
         }).unwrap();
         navigate("/");
       } catch (error) {
@@ -132,18 +153,20 @@ const UserProfile = () => {
               <label htmlFor="name">Name</label>
               <input
                 {...register("name")}
-                defaultValue={currentUser.name}
+                // defaultValue={currentUser.name}
                 name="name"
                 type="text"
+                id="name"
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
               />
             </div>
             <div className="flex flex-col space-y-2">
               <label htmlFor="email">Email</label>
               <input
-                // {...register("email")}
-                defaultValue={currentUser.email}
+                {...register("email")}
+                // defaultValue={currentUser.email}
                 name="email"
+                id="email"
                 type="text"
                 disabled
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
@@ -155,8 +178,8 @@ const UserProfile = () => {
             <div className="flex flex-col space-y-2">
               <label htmlFor="username">Username</label>
               <input
-                // {...register("username")}
-                defaultValue={currentUser.username}
+                {...register("username")}
+                // defaultValue={currentUser.username}
                 name="username"
                 id="username"
                 disabled
@@ -168,7 +191,7 @@ const UserProfile = () => {
               )}
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="profile-img">Profile image</label>
+              <label htmlFor="image">Profile image</label>
               <div className="flex space-x-2">
                 <img
                   className="rounded-full inline-block w-12 h-12"
@@ -181,6 +204,8 @@ const UserProfile = () => {
                   onChange={(e) => setFile(e.target.files[0])}
                   name="files"
                   type="file"
+                  id="image"
+                  accept="image/*"
                   className="w-full border border-solid p-2 rounded-md border-gray-300 cursor-text"
                 />
               </div>
@@ -195,7 +220,7 @@ const UserProfile = () => {
               <label htmlFor="website">Website URL</label>
               <input
                 {...register("website")}
-                defaultValue={currentUser.website}
+                // defaultValue={currentUser.website || ""}
                 maxLength={100}
                 name="website"
                 type="text"
@@ -216,9 +241,10 @@ const UserProfile = () => {
               <label htmlFor="location">Location</label>
               <input
                 {...register("location")}
-                defaultValue={currentUser.location}
+                // defaultValue={currentUser.location || ""}
                 maxLength={100}
                 name="location"
+                id="location"
                 type="text"
                 placeholder="HCMC, Vietnam"
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
@@ -236,7 +262,7 @@ const UserProfile = () => {
               <label htmlFor="bio">Bio</label>
               <textarea
                 {...register("bio")}
-                defaultValue={currentUser.bio}
+                // defaultValue={currentUser.bio || ""}
                 maxLength={200}
                 name="bio"
                 id="bio"
@@ -267,7 +293,7 @@ const UserProfile = () => {
               </label>
               <textarea
                 {...register("learning")}
-                defaultValue={currentUser.learning}
+                // defaultValue={currentUser.learning || ""}
                 cols={1}
                 rows={2}
                 maxLength={200}
@@ -289,18 +315,18 @@ const UserProfile = () => {
               <label htmlFor="skills">
                 Skills/Languages
                 <p className="text-sm text-gray-400">
-                  learning: yup.string().trim(), What tools and languages are
-                  you most experienced with? Are you specialized or more of a
-                  generalist?
+                  What tools and languages are you most experienced with? Are
+                  you specialized or more of a generalist?
                 </p>
               </label>
               <textarea
                 {...register("skills")}
-                defaultValue={currentUser.skills}
+                // defaultValue={currentUser.skills || ""}
                 cols={1}
                 rows={2}
                 maxLength={200}
                 name="skills"
+                id="skills"
                 type="text"
                 placeholder="Any languagues, framworks, etc. to hightlight?"
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
@@ -312,30 +338,33 @@ const UserProfile = () => {
               </p>
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="current">
+              <label htmlFor="workingOn">
                 Currently working on
                 <p className="text-sm text-gray-400">
                   What projects are currently occupying most of your time?
                 </p>
               </label>
               <textarea
-                {...register("current")}
-                defaultValue={currentUser.current}
+                {...register("workingOn")}
+                // defaultValue={currentUser.workingOn || ""}
                 cols={1}
                 rows={2}
                 maxLength={200}
-                name="current"
+                name="workingOn"
+                id="workingOn"
                 type="text"
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
-                onChange={(e) => currentCount.increment(e.target.value.length)}
+                onChange={(e) =>
+                  workingOnCount.increment(e.target.value.length)
+                }
               />
               <p className="text-right text-sm text-gray-400">
-                <span>{currentCount.count}</span>
+                <span>{workingOnCount.count}</span>
                 /200
               </p>
             </div>
             <div className="flex flex-col space-y-2">
-              <label htmlFor="available">
+              <label htmlFor="availableFor">
                 Available for
                 <p className="text-sm text-gray-400">
                   What kinds of collaborations or discussions are you available
@@ -343,27 +372,76 @@ const UserProfile = () => {
                 </p>
               </label>
               <textarea
-                {...register("available")}
-                defaultValue={currentUser.avalable}
+                {...register("availableFor")}
+                // defaultValue={currentUser.availableFor || ""}
                 cols={1}
                 rows={2}
                 maxLength={200}
-                name="available"
+                name="availableFor"
+                id="availableFor"
                 type="text"
                 className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
                 onChange={(e) =>
-                  availableCount.increment(e.target.value.length)
+                  availableForCount.increment(e.target.value.length)
                 }
               />
               <p className="text-right text-sm text-gray-400">
-                <span>{availableCount.count}</span>
+                <span>{availableForCount.count}</span>
                 /200
               </p>
             </div>
           </div>
-
           <div className="bg-white w-full p-4 rounded-md grid gap-4">
-            <Button isFull hasBg>
+            <h2 className="text-4xl font-semibold">Work</h2>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="workingAt">Work</label>
+              <input
+                {...register("workingAt")}
+                // defaultValue={currentUser.workingAt || ""}
+                maxLength={100}
+                name="workingAt"
+                type="text"
+                id="workingAt"
+                placeholder="What do you do? Example: Senior Devaloper @ Officience .ltd"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) =>
+                  workingAtCount.increment(e.target.value.length)
+                }
+              />
+              {errors.workingAt && (
+                <p className="text-red-400">{errors.workingAt.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{workingAtCount.count}</span>
+                /100
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="education">Education</label>
+              <input
+                {...register("education")}
+                // defaultValue={currentUser.education || ""}
+                maxLength={100}
+                name="education"
+                id="education"
+                type="text"
+                placeholder="What did you go to school?"
+                className="border border-solid p-2 rounded-md border-gray-300 cursor-text"
+                onChange={(e) =>
+                  educationCount.increment(e.target.value.length)
+                }
+              />
+              {errors.education && (
+                <p className="text-red-400">{errors.education.message}</p>
+              )}
+              <p className="text-right text-sm text-gray-400">
+                <span>{educationCount.count}</span>
+                /100
+              </p>
+            </div>
+          </div>
+          <div className="bg-white w-full p-4 rounded-md grid gap-4">
+            <Button isFull hasBg disabled={!isDirty || !errors}>
               Save Profile Information
             </Button>
           </div>
