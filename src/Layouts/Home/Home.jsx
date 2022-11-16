@@ -1,16 +1,25 @@
 import React from "react";
 import tw from "twin.macro";
 
+import { useSelector } from "react-redux";
+import { useGetPostsQuery } from "../../core/features/posts/postsApiSlice";
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
+
 import PostList from "../../components/PostList/PostList";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import RightSideBar from "../RightSideBar/RightSideBar";
 
 function Home() {
+  const { id } = useSelector(selectCurrentUser);
+  const { data: posts, isLoading } = useGetPostsQuery(null, {
+    refetchOnMountOrArgChange: true,
+  });
+
   return (
     <Wrapper>
       <LeftSideBar />
 
-      <PostList />
+      <PostList isLoading={isLoading} posts={posts} />
 
       <RightSideBar />
     </Wrapper>

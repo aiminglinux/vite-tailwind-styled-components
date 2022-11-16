@@ -88,7 +88,7 @@ function Navbar() {
                 <ProfileMenu onClick={toggleProfileMenu}>
                   <MenuList>
                     <MenuItem>
-                      <Link to="profile">
+                      <Link to={`/${currentUser.username}`}>
                         <div>
                           <span className="block">{currentUser.name}</span>
                           <small>@{currentUser.username}</small>

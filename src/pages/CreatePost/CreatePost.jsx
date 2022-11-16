@@ -106,12 +106,13 @@ const CreatePost = () => {
                 id=""
                 rows="1"
                 placeholder="New post title here..."
-              ></textarea>
+              />
             </div>
             <div>
-              <div className="flex space-x-2 items-center">
+              <div className="flex space-x-2 items-center ">
                 <div className="flex space-x-2 h-full">
                   <input
+                    className="focus:outline-none"
                     {...register("tags")}
                     name="tags"
                     type="text"

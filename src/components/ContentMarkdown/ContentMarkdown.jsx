@@ -6,7 +6,7 @@ import CodeBlock from "./components/CodeBlock";
 
 const ContentMarkdown = (props) => {
   return (
-    <article>
+    <article className="prose max-w-none">
       <ReactMarkdown
         components={CodeBlock}
         rehypePlugins={[rehypeRaw]}

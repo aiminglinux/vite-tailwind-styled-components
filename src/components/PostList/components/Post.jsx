@@ -1,22 +1,35 @@
+import moment from "moment/moment";
 import tw from "twin.macro";
+import { useNavigate } from "react-router-dom";
 
-function Post() {
+import { formatDate, createPostUrl } from "../../../utils/string";
+
+const Post = ({ post }) => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <Content>
-        <Header>
-          <AuthorImg
-            src="https://res.cloudinary.com/practicaldev/image/fetch/s--npj3iR0b--/c_fill,f_auto,fl_progressive,h_640,q_auto,w_640/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/827951/fe26f154-d505-4327-8748-68fad81e0c8b.jpeg"
-            alt="abc"
-          />
+        <Header onClick={() => navigate(`/${post.author?.username}`)}>
+          <AuthorImg src={post.author.picture.url} alt={post.author.username} />
           <AuthorMeta>
-            <AuthorName>Mahmoud Harmouch</AuthorName>
+            <AuthorName>{post.author.name}</AuthorName>
             <CreateAt>
-              Sep 26 (<UpdateAt>4 days ago</UpdateAt>)
+              {formatDate(post.createdAt)}
+              {formatDate(post.createdAt) !== formatDate(post.updatedAt) && (
+                <UpdateAt>{` Updated ${formatDate(post.updatedAt)}`}</UpdateAt>
+              )}
             </CreateAt>
           </AuthorMeta>
         </Header>
-        <Title>Continue Using .env Files As Usual.</Title>
+        <Title
+          onClick={() =>
+            navigate(
+              `/${post.author.username}/${createPostUrl(post.title, post.id)}`
+            )
+          }
+        >
+          {post.title}
+        </Title>
         <TagList>
           <Tag>#career</Tag>
           <Tag href="#!">
@@ -84,7 +97,7 @@ function Post() {
       </Content>
     </Wrapper>
   );
-}
+};
 
 const Wrapper = tw.div`w-full border border-solid md:rounded-md bg-white`;
 const Content = tw.div`p-5`;

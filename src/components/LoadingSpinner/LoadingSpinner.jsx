@@ -1,10 +1,10 @@
 import tw, { theme } from "twin.macro";
-import { MoonLoader } from "react-spinners";
+import { MoonLoader, DotLoader, HashLoader } from "react-spinners";
 
 const LoadingSpinner = () => {
   return (
     <Wrapper>
-      <MoonLoader color={theme`colors.blue.600`} speedMultiplier={0.6} />
+      <HashLoader color={theme`colors.blue.600`} speedMultiplier={0.6} />
     </Wrapper>
   );
 };
