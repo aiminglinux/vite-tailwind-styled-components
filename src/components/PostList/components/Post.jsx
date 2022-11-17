@@ -2,10 +2,15 @@ import moment from "moment/moment";
 import tw from "twin.macro";
 import { useNavigate } from "react-router-dom";
 
-import { formatDate, createPostUrl } from "../../../utils/string";
+import {
+  formatDate,
+  createPostUrl,
+  createPostSlug,
+} from "../../../utils/string";
 
 const Post = ({ post }) => {
   const navigate = useNavigate();
+  // console.log("Post Slug: ", createPostSlug(post.title));
   return (
     <Wrapper>
       <Content>

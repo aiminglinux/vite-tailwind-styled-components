@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+
+// Components
 import NotFound from "../components/NotFound/NotFound";
 import RequireAuthen from "../components/RequireAuthen/RequireAuthen";
 import DefaultLayout from "../Layouts/DefaultLayout/DefaultLayout";
@@ -30,9 +32,16 @@ function AppRoutes() {
         </Route>
         <Route path=":username">
           <Route index element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
+
           <Route path=":postUrl">
             <Route index element={<PostDetail />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
+          {/* <Route path=":postSlug">
+            <Route index element={<PostDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Route> */}
         </Route>
         <Route path="auth">
           <Route path="login" element={<Login />} />

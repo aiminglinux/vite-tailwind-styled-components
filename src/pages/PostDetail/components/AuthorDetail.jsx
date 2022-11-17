@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+
+import { formatDate } from "../../../utils/string";
 import Button from "../../../components/Button/Button";
 
-const AuthorDetail = () => {
+const AuthorDetail = ({ author }) => {
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 p-4 border rounded-md bg-slate-50	 border-t-[2rem] border-t-gray-300">
@@ -9,12 +11,12 @@ const AuthorDetail = () => {
           <Link to="#!" className="flex items-end space-x-2">
             <span className="border border-gray-600 rounded-full">
               <img
-                src="http://res.cloudinary.com/drkdy5tsq/image/upload/v1668413477/pictures/xwzoluksggajcqc3zzgy.jpg"
-                alt="abc"
+                src={author.picture?.url}
+                alt="author.username"
                 className="w-12 h-12 rounded-full"
               />
             </span>
-            <span className="text-xl font-medium">fReeman</span>
+            <span className="text-xl font-medium">{author.name}</span>
           </Link>
         </div>
         <div>
@@ -22,28 +24,30 @@ const AuthorDetail = () => {
             Follow
           </Button>
         </div>
-        <p className="text-gray-600">
-          Creative front-end developer with more than 2 years of experience in
-          enterprise companies and startups. Proficient in HTML, CSS,
-          JavaScript, React. Passionate about UX and UI.
-        </p>
+        <p className="text-gray-600">{author.bio}</p>
         <div className="">
           <ul className="text-gray-700 grid gap-4">
-            <li>
-              <p className="text-sm font-medium">LOCATION</p>
-              <p>Toronto, Canada</p>
-            </li>
-            <li>
-              <p className="text-sm font-medium">EDUCATION</p>
-              <p>Toronto, Canada</p>
-            </li>
-            <li>
-              <p className="text-sm font-medium">WORK</p>
-              <p>Front end developer</p>
-            </li>
+            {author.location && (
+              <li>
+                <p className="text-sm font-medium">LOCATION</p>
+                <p>{author.location}</p>
+              </li>
+            )}
+            {author.education && (
+              <li>
+                <p className="text-sm font-medium">EDUCATION</p>
+                <p>{author.education}</p>
+              </li>
+            )}
+            {author.workingOn && (
+              <li>
+                <p className="text-sm font-medium">NOW BUSY ON</p>
+                <p>{author.workingOn}</p>
+              </li>
+            )}
             <li>
               <p className="text-sm font-medium">JOINED</p>
-              <p>Sep 5, 2022</p>
+              <p>{formatDate(author.createdAt, false)}</p>
             </li>
           </ul>
         </div>
@@ -52,7 +56,10 @@ const AuthorDetail = () => {
         <div className="bg-slate-50	 rounded-md border">
           <div className="border-b p-4">
             <h3 className="font-semibold text-xl">
-              More from <span className="text-blue-600">freeman</span>
+              More from{" "}
+              <span className="text-blue-600 hover:cursor-pointer">
+                {author.name}
+              </span>
             </h3>
           </div>
           <div className="p-4 border-b">

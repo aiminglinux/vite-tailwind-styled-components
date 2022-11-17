@@ -8,7 +8,7 @@ import useRequireAuthen from "../../hooks/useRequireAuthen";
 import {
   AiOutlineBell,
   AiOutlineCode,
-  AiOutlineMenuFold,
+  AiOutlineMenu,
   AiOutlineSearch,
 } from "react-icons/ai";
 
@@ -42,7 +42,7 @@ function Navbar() {
         <LeftSide>
           {isMobile && (
             <MobMenu onClick={toggleMobileMenu}>
-              <AiOutlineMenuFold size={24} />
+              <AiOutlineMenu size={10} />
             </MobMenu>
           )}
           <Logo>
@@ -63,7 +63,7 @@ function Navbar() {
         <RightSide>
           {isAuthed ? (
             <Fragment>
-              <Link to="create-post">
+              <Link to="create-post" className="hidden md:block">
                 <Button>Create Post</Button>
               </Link>
 
@@ -144,10 +144,10 @@ const Logo = styled(Link).attrs({
     ${tw`w-12 h-12`}
   }
 `;
-const RightSide = tw.div`flex items-center relative space-x-4`;
-const SearchBar = tw.div`min-w-[420px] h-[40px] relative flex items-center border rounded-md border-none`;
-const SearchInput = tw.input`bg-transparent invisible sm:visible outline-none w-full h-full cursor-text pl-4 border-solid border border-gray-200 rounded-md overflow-hidden hover:border-gray-400 focus:border-blue-600`;
-const SearchButton = tw.button`absolute w-[38px] left-auto right-0 h-full px-2 hover:bg-blue-500 rounded-r-md`;
+const RightSide = tw.div`flex flex-nowrap items-center relative space-x-4`;
+const SearchBar = tw.div`hidden sm:w-[420px] h-[40px] relative flex items-center border rounded-md border-none`;
+const SearchInput = tw.input`bg-transparent hidden sm:block outline-none w-full h-full cursor-text pl-4 border-solid border border-gray-200 rounded-md overflow-hidden hover:border-gray-400 focus:border-blue-600`;
+const SearchButton = tw.button`hidden sm:block absolute w-[38px] left-auto right-0 h-full px-2 hover:bg-blue-500 rounded-r-md`;
 const ProfileMenu = tw.div`absolute ml-0 list-none no-underline bg-white right-0 top-14 border border-solid rounded-md w-64 p-2 [a]:(block w-full p-2 rounded-md)`;
 const MenuList = tw.ul`space-y-2`;
 const MenuItem = styled.li`
@@ -169,7 +169,7 @@ const MenuItem = styled.li`
   }
 `;
 const Avatar = styled.img`
-  ${tw`w-12 rounded-full object-cover overflow-hidden cursor-pointer hover:opacity-80`}
+  ${tw`w-12 h-12 rounded-full object-cover overflow-hidden cursor-pointer hover:opacity-80`}
 `;
 
 export default Navbar;

@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../core/features/auth/authSlice";
 import { useCreatePostMutation } from "../../core/features/posts/postsApiSlice";
 import * as yup from "yup";
@@ -33,6 +34,7 @@ const CreatePost = () => {
     resolver: yupResolver(postSchema),
   });
 
+  const navigate = useNavigate();
   const [file, setFile] = useState();
   const previewURL = useBase64(file);
   const { isAuthed, handleAuth } = useRequireAuthen();
@@ -40,7 +42,6 @@ const CreatePost = () => {
   const [createNewPost, { isLoading, isError }] = useCreatePostMutation();
 
   const handlePostSubmit = async (data) => {
-    console.log(data);
     const { title, content, tags } = data;
 
     // console.log(content);
@@ -53,6 +54,7 @@ const CreatePost = () => {
           tags,
           authorUsername: currentUser.username,
         }).unwrap();
+        navigate("/");
       } catch (error) {
         console.log(error);
       }
