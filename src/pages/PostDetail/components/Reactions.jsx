@@ -1,7 +1,13 @@
 import { RiHeart2Line, RiHeart2Fill, RiBookmarkLine } from "react-icons/ri";
 import { MdOutlineModeComment } from "react-icons/md";
 
-const Reactions = () => {
+const Reactions = ({ commentRef }) => {
+  const scrollToComment = () => {
+    if (commentRef.current) {
+      commentRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="grid fixed top-40 w-16">
       <div className="grid grid-flow-raw gap-4 justify-stretch top-10">
@@ -11,7 +17,10 @@ const Reactions = () => {
           </span>
           <span>12</span>
         </button>
-        <button className="inline-flex flex-col flex-1 items-center">
+        <button
+          className="inline-flex flex-col flex-1 items-center"
+          onClick={scrollToComment}
+        >
           <span className="p-2 rounded-full hover:bg-orange-100 hover:text-orange-500 transition-none">
             <MdOutlineModeComment size={28} />
           </span>

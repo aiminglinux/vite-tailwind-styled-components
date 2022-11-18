@@ -11,15 +11,14 @@ import RightSideBar from "../RightSideBar/RightSideBar";
 
 function Home() {
   const { id } = useSelector(selectCurrentUser);
-  const { data: posts, isLoading } = useGetPostsQuery(null, {
+  const { data: posts, isFetching } = useGetPostsQuery(null, {
     refetchOnMountOrArgChange: true,
   });
-
   return (
     <Wrapper>
       <LeftSideBar />
 
-      <PostList isLoading={isLoading} posts={posts} />
+      <PostList isFetching={isFetching} posts={posts} />
 
       <RightSideBar />
     </Wrapper>

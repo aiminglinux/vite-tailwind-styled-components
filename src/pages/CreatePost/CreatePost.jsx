@@ -83,22 +83,53 @@ const CreatePost = () => {
             )}
 
             <div>
-              <label
-                htmlFor="filePickup"
-                className="border-2 border-solid rounded-md p-2"
-              >
-                Add cover image
-              </label>
+              {!file && (
+                <label
+                  htmlFor="filePickup"
+                  className="border-2 border-solid rounded-md p-2"
+                >
+                  Add cover image
+                </label>
+              )}
               <input
                 {...register("file")}
                 name="file"
                 id="filePickup"
-                className="invisible"
+                className="hidden"
                 type="file"
                 accept="image/*"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e) => {
+                  setFile(e.target.files[0]), (e.target.value = null);
+                }}
               />
-              <img className="w-32" src={previewURL?.toString()} alt="img" />
+              {file && (
+                <div className="flex gap-2">
+                  <img
+                    className="w-32"
+                    src={previewURL?.toString()}
+                    alt="img"
+                  />
+                  <div className="flex flex-col justify-center gap-2">
+                    <label
+                      htmlFor="filePickup"
+                      className="border border-solid border-gray-300 rounded-md px-2 py-1 bg-blue-200 text-blue-500"
+                      onChange={(e) => {
+                        setFile(e.target.file[0]), (e.target.value = null);
+                      }}
+                    >
+                      Change image
+                    </label>
+                    <div
+                      onClick={() => {
+                        setFile(undefined);
+                      }}
+                      className="border border-solid border-gray-300 rounded-md px-2 py-1 text-red-500 bg-red-200"
+                    >
+                      Remove image
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <textarea

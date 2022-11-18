@@ -2,15 +2,43 @@ import { nanoid } from "@reduxjs/toolkit";
 
 import Skeleton from "../Skeleton/Skeleton";
 import Post from "./components/Post";
+import NoContent from "../NotFound/NoContent";
 
-const PostList = ({ isLoading, posts }) => {
-  // console.log(posts);
+// const PostList = ({ isFetching, posts, enableImage = true }) => {
+//   return (
+//     <div className="flex flex-col space-y-4">
+//       {[1, 2, 3, 4, 5].map((a) => (
+//         <Skeleton key={a} isFirstPost={enableImage && a === 1} />
+//       ))}
+//     </div>
+//   );
+// };
+
+const PostList = ({ isFetching, posts, enableImage = true }) => {
   return (
-    <div className="flex flex-col space-y-4">
-      {posts?.length > 0
-        ? posts.map((post) => <Post key={nanoid()} post={post} />)
-        : "no content"}
-    </div>
+    <>
+      {isFetching ? (
+        <div className="flex flex-col space-y-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} isFirstPost={enableImage && i === 1} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col space-y-4">
+          {posts?.length > 0 ? (
+            posts.map((post, idx) => (
+              <Post
+                key={nanoid()}
+                post={post}
+                isFirstPost={enableImage && idx === 0}
+              />
+            ))
+          ) : (
+            <NoContent />
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

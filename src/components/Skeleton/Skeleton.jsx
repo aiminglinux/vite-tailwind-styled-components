@@ -1,8 +1,11 @@
 import React from "react";
 
-function Skeleton() {
+const Skeleton = ({ isFirstPost }) => {
   return (
     <div className="border border-blue-300 shadow rounded-md p-6 w-full relative">
+      {isFirstPost && (
+        <div className="w-full h-64 bg-slate-200 rounded mb-2"></div>
+      )}
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-full bg-slate-200 h-12 w-12"></div>
         <div className="flex-1 space-y-2 py-1">
@@ -24,11 +27,8 @@ function Skeleton() {
           </div>
         </div>
       </div>
-      <div className="absolute w-[70%] h-full accent-white/50 drop-shadow-md ">
-        <div className="shimmer"></div>
-      </div>
     </div>
   );
-}
+};
 
 export default Skeleton;

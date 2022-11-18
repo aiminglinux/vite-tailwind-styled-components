@@ -74,25 +74,25 @@ const UserProfile = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
   } = useForm({
     defaultValues: {
-      name: currentUser.name,
-      email: currentUser.email,
-      username: currentUser.username,
+      name: currentUser?.name,
+      email: currentUser?.email,
+      username: currentUser?.username,
       files: "",
-      website: currentUser.website,
-      location: currentUser.location,
-      bio: currentUser.bio,
-      education: currentUser.education,
-      workingAt: currentUser.workingAt,
-      workingOn: currentUser.workingOn,
-      availableFor: currentUser.availableFor,
-      learning: currentUser.learning,
-      skills: currentUser.skills,
+      website: currentUser?.website || "",
+      location: currentUser?.location || "",
+      bio: currentUser?.bio || "",
+      education: currentUser?.education || "",
+      workingAt: currentUser?.workingAt || "",
+      workingOn: currentUser?.workingOn || "",
+      availableFor: currentUser?.availableFor || "",
+      learning: currentUser?.learning || "",
+      skills: currentUser?.skills || "",
     },
-    // mode: "onBlur",
-    reValidateMode: "onBlur",
+    mode: "all",
+    // reValidateMode: "onChange",
     resolver: yupResolver(profileSchema),
   });
 
@@ -441,7 +441,7 @@ const UserProfile = () => {
             </div>
           </div>
           <div className="bg-white w-full p-4 rounded-md grid gap-4">
-            <Button isFull hasBg disabled={!isDirty || !errors}>
+            <Button isFull hasBg disabled={!isDirty}>
               Save Profile Information
             </Button>
           </div>

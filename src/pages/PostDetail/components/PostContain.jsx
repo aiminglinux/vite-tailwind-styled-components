@@ -1,7 +1,19 @@
+import { forwardRef, useRef, useImperativeHandle } from "react";
+import { BsChevronExpand } from "react-icons/bs";
+
 import { formatDate } from "../../../utils/string";
 import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
+import Button from "../../../components/Button/Button";
 
-const PostContent = ({ post }) => {
+const PostContent = forwardRef(({ post }, ref) => {
+  const cmtRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    scrollIntoView: () => {
+      cmtRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+  }));
+
   return (
     <div className="border bg-white rounded-md border-solid">
       <img
@@ -28,9 +40,7 @@ const PostContent = ({ post }) => {
             </div>
           </div>
 
-          <h1 className="text-5xl font-semibold">
-            Highest Paying Jobs for Developer
-          </h1>
+          <h1 className="text-5xl font-semibold">{post.title}</h1>
           <div className="space-x-2">
             <a href="#!">#startup</a>
             <a href="#!">#productivity</a>
@@ -42,8 +52,23 @@ const PostContent = ({ post }) => {
           </div>
         </div>
       </div>
+      <div
+        id="comment-section"
+        className="border-t p-4 md:px-12 md:py-8 space-y-4"
+        ref={cmtRef}
+      >
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-semibold">Lastest comment (0)</h2>
+            <button className="p-4 hover:bg-indigo-100 hover:rounded-md">
+              <BsChevronExpand size={16} />
+            </button>
+          </div>
+          <Button>Subcribe</Button>
+        </div>
+      </div>
     </div>
   );
-};
+});
 
 export default PostContent;

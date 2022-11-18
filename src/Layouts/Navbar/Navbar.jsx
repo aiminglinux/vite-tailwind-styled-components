@@ -1,4 +1,5 @@
-import { useSelector } from "react-redux";
+import { Fragment, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import tw, { styled, theme } from "twin.macro";
 
@@ -15,8 +16,8 @@ import {
 import useBreakpoint from "../../hooks/useBreakpoint";
 import useToggle from "../../hooks/useToggle";
 
-import { Fragment, useEffect, useRef } from "react";
 import Button from "../../components/Button/Button";
+import postsApiSlice from "../../core/features/posts/postsApiSlice";
 import MobileMenu from "./components/MobileMenu";
 
 function Navbar() {
@@ -26,6 +27,7 @@ function Navbar() {
   const isMobile = useBreakpoint(theme`screens.md`.replace("px", ""));
   const [mobileMenu, toggleMobileMenu] = useToggle(false);
   const [profileMenu, toggleProfileMenu] = useToggle(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const closeProfileMenu = (e) => {
@@ -46,7 +48,16 @@ function Navbar() {
             </MobMenu>
           )}
           <Logo>
-            <AiOutlineCode />
+            <AiOutlineCode
+              onClick={() =>
+                dispatch(
+                  postsApiSlice.endpoints.getPosts.initiate(null, {
+                    subscribe: false,
+                    forceRefetch: true,
+                  })
+                )
+              }
+            />
           </Logo>
           {isMobile && mobileMenu && (
             <MobileMenu toggleMobileMenu={toggleMobileMenu} />

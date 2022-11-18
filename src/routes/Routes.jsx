@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 // Components
 import NotFound from "../components/NotFound/NotFound";
@@ -17,9 +19,14 @@ import Profile from "../pages/Profile/Profile";
 import ReadingList from "../pages/ReadingList/ReadingList";
 import Register from "../pages/Register/Register";
 
-function AppRoutes() {
+const AppRoutes = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [location]);
   return (
-    <Routes>
+    <Routes location={location} key={location.pathname}>
       <Route path="/" element={<DefaultLayout />}>
         <Route index element={<Home />} />
         <Route element={<RequireAuthen />}>
@@ -56,6 +63,6 @@ function AppRoutes() {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
-}
+};
 
 export default AppRoutes;

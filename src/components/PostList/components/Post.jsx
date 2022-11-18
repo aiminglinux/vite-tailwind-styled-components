@@ -8,11 +8,23 @@ import {
   createPostSlug,
 } from "../../../utils/string";
 
-const Post = ({ post }) => {
+const Post = ({ post, isFirstPost }) => {
   const navigate = useNavigate();
   // console.log("Post Slug: ", createPostSlug(post.title));
   return (
     <Wrapper>
+      {isFirstPost && (
+        <img
+          src={post.image?.url}
+          alt=""
+          className="h-64 w-full object-fit cursor-pointer rounded-t-md"
+          onClick={() =>
+            navigate(
+              `/${post.author.username}/${createPostUrl(post.title, post.id)}`
+            )
+          }
+        />
+      )}
       <Content>
         <Header onClick={() => navigate(`/${post.author?.username}`)}>
           <AuthorImg src={post.author.picture.url} alt={post.author.username} />
