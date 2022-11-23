@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import tw, { styled, theme } from "twin.macro";
 
 import { selectCurrentUser } from "../../core/features/auth/authSlice";
+import { useLazyLogoutQuery } from "../../core/features/auth/authApiSlice";
 import useRequireAuthen from "../../hooks/useRequireAuthen";
+import Modal from "../../components/Portal/Component/Modal";
 
 import {
   AiOutlineBell,
@@ -21,12 +23,15 @@ import postsApiSlice from "../../core/features/posts/postsApiSlice";
 import MobileMenu from "./components/MobileMenu";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const [trigger] = useLazyLogoutQuery();
   const currentUser = useSelector(selectCurrentUser);
   const { isAuthed } = useRequireAuthen();
   const navBarRef = useRef(null);
   const isMobile = useBreakpoint(theme`screens.md`.replace("px", ""));
   const [mobileMenu, toggleMobileMenu] = useToggle(false);
   const [profileMenu, toggleProfileMenu] = useToggle(false);
+  const [modal, toggleModal] = useToggle(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,106 +43,127 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", closeProfileMenu);
   }, []);
 
+  const handleLogout = (async) => {
+    try {
+      trigger();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <Wrapper ref={navBarRef}>
-      <Inner>
-        <LeftSide>
-          {isMobile && (
-            <MobMenu onClick={toggleMobileMenu}>
-              <AiOutlineMenu size={10} />
-            </MobMenu>
-          )}
-          <Logo>
-            <AiOutlineCode
-              onClick={() =>
-                dispatch(
-                  postsApiSlice.endpoints.getPosts.initiate(null, {
-                    subscribe: false,
-                    forceRefetch: true,
-                  })
-                )
-              }
-            />
-          </Logo>
-          {isMobile && mobileMenu && (
-            <MobileMenu toggleMobileMenu={toggleMobileMenu} />
-          )}
-        </LeftSide>
+    <Fragment>
+      {modal && (
+        <Modal
+          title={`Are you sure to logout?`}
+          promptText={`We are waiting for your next awesome post!`}
+          isOpen={modal}
+          setOn={toggleModal}
+          handleAction={handleLogout}
+          action={`Logout`}
+        />
+      )}
+      <Wrapper ref={navBarRef}>
+        <Inner>
+          <LeftSide>
+            {isMobile && (
+              <MobMenu onClick={toggleMobileMenu}>
+                <AiOutlineMenu size={10} />
+              </MobMenu>
+            )}
+            <Logo>
+              <AiOutlineCode
+                onClick={() =>
+                  dispatch(
+                    postsApiSlice.endpoints.getPosts.initiate(null, {
+                      subscribe: false,
+                      forceRefetch: true,
+                    })
+                  )
+                }
+              />
+            </Logo>
+            {isMobile && mobileMenu && (
+              <MobileMenu toggleMobileMenu={toggleMobileMenu} />
+            )}
+          </LeftSide>
 
-        <SearchBar>
-          <SearchInput />
-          <SearchButton>
-            <AiOutlineSearch size={24} />
-          </SearchButton>
-        </SearchBar>
+          <SearchBar>
+            <SearchInput />
+            <SearchButton>
+              <AiOutlineSearch size={24} />
+            </SearchButton>
+          </SearchBar>
 
-        <RightSide>
-          {isAuthed ? (
-            <Fragment>
-              <Link to="create-post" className="hidden md:block">
-                <Button>Create Post</Button>
-              </Link>
+          <RightSide>
+            {isAuthed ? (
+              <Fragment>
+                <Link to="create-post" className="hidden md:block">
+                  <Button>Create Post</Button>
+                </Link>
 
-              <Link
-                to="#!"
-                className="relative hover:bg-blue-200 p-1 rounded-md"
-              >
-                <AiOutlineBell size={32} />
-                <div className="absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full">
-                  <small className="text-lg">3</small>
+                <Link
+                  to="#!"
+                  className="relative hover:bg-blue-200 p-1 rounded-md"
+                >
+                  <AiOutlineBell size={32} />
+                  <div className="absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full">
+                    <small className="text-lg">3</small>
+                  </div>
+                </Link>
+
+                <div>
+                  <Avatar
+                    id="avatar"
+                    src={currentUser.picture.url}
+                    onClick={toggleProfileMenu}
+                  />
                 </div>
-              </Link>
-
-              <div>
-                <Avatar
-                  id="avatar"
-                  src={currentUser.picture.url}
-                  onClick={toggleProfileMenu}
-                />
-              </div>
-              {profileMenu && (
-                <ProfileMenu onClick={toggleProfileMenu}>
-                  <MenuList>
-                    <MenuItem>
-                      <Link to={`/${currentUser.username}`}>
-                        <div>
-                          <span className="block">{currentUser.name}</span>
-                          <small>@{currentUser.username}</small>
-                        </div>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to="dashboard">Dashboard</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to="create-post">Create Post</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to="reading-list">Reading List</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to="settings">Settings</Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link to="auth/confirm/logout">Log Out</Link>
-                    </MenuItem>
-                  </MenuList>
-                </ProfileMenu>
-              )}
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Link to="auth/login">
-                <Button isText>Log in</Button>
-              </Link>
-              <Link to="auth/register">
-                <Button>Create account</Button>
-              </Link>
-            </Fragment>
-          )}
-        </RightSide>
-      </Inner>
-    </Wrapper>
+                {profileMenu && (
+                  <ProfileMenu onClick={toggleProfileMenu}>
+                    <MenuList>
+                      <MenuItem>
+                        <Link to={`/${currentUser.username}`}>
+                          <div>
+                            <span className="block">{currentUser.name}</span>
+                            <small>@{currentUser.username}</small>
+                          </div>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link to="dashboard">Dashboard</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link to="create-post">Create Post</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link to="reading-list">Reading List</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link to="settings">Settings</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link onClick={toggleModal}>Log Out</Link>
+                      </MenuItem>
+                    </MenuList>
+                  </ProfileMenu>
+                )}
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Link to="auth/login">
+                  <Button isText>Log in</Button>
+                </Link>
+                <Link to="auth/register">
+                  <Button>Create account</Button>
+                </Link>
+              </Fragment>
+            )}
+          </RightSide>
+        </Inner>
+      </Wrapper>
+    </Fragment>
   );
 }
 const Wrapper = tw.nav`w-full items-center flex mx-auto w-full h-14 bg-white fixed left-0 top-0 z-30 shadow`;

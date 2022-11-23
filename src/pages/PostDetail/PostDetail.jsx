@@ -13,13 +13,17 @@ import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const PostDetail = () => {
   const commentRef = useRef(null);
-  const { username, postUrl } = useParams();
-  const { postTitle, postId } = getPostParams(postUrl);
-  const { data: post, isLoading } = useGetPostQuery(
-    { url: `${username}/${createPostUrl(postTitle, postId)}` },
+  const { username, postSlug } = useParams();
+
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = useGetPostQuery(
+    { url: `${username}/${postSlug}` },
     { refetchOnMountOrArgChange: true }
   );
-  //   console.log(post);
+  // console.log(post);
   return (
     <Fragment>
       {isLoading ? (
@@ -39,7 +43,7 @@ const PostDetail = () => {
           </div>
         </>
       ) : (
-        "not found"
+        <NotFound />
       )}
     </Fragment>
   );

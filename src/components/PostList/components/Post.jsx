@@ -1,35 +1,69 @@
-import moment from "moment/moment";
-import tw from "twin.macro";
 import { useNavigate } from "react-router-dom";
+import tw from "twin.macro";
+import debounce from "lodash/debounce";
 
-import {
-  formatDate,
-  createPostUrl,
-  createPostSlug,
-} from "../../../utils/string";
+import { formatDate } from "../../../utils/string";
+
+import { useRef, useState } from "react";
+import ProfileCard from "../../Portal/Component/ProfileCard";
+import AuthorDetail from "../../../pages/PostDetail/components/AuthorDetail";
 
 const Post = ({ post, isFirstPost }) => {
+  const authorRef = useRef();
+  const [openProfile, setOpenProfile] = useState(false);
+  const [coords, setCoords] = useState({});
   const navigate = useNavigate();
-  // console.log("Post Slug: ", createPostSlug(post.title));
+
+  const updateTooltipCoords = (target) => {
+    const rect = target.getBoundingClientRect();
+    setCoords({
+      left: rect.x, // add half the width of the button for centering
+      top: rect.y + window.scrollY - 25, // add scrollY offset, as soon as getBountingClientRect takes on screen coords
+    });
+  };
+
+  const handleMouseOver = () => {
+    setOpenProfile(true);
+    // alert("done");
+  };
+
+  const delay = debounce(handleMouseOver, 500);
+  // console.log(post);
+
   return (
     <Wrapper>
+      {openProfile && (
+        <ProfileCard
+          coords={coords}
+          setOn={setOpenProfile}
+          isOpen={openProfile}
+          updateTooltipCoords={() => updateTooltipCoords(avaRef.current)}
+        >
+          <AuthorDetail author={post.author} more={false} />
+        </ProfileCard>
+      )}
       {isFirstPost && (
         <img
           src={post.image?.url}
           alt=""
           className="h-64 w-full object-fit cursor-pointer rounded-t-md"
-          onClick={() =>
-            navigate(
-              `/${post.author.username}/${createPostUrl(post.title, post.id)}`
-            )
-          }
+          onClick={() => navigate(`/${post.author.username}/${post.slug}`)}
         />
       )}
       <Content>
         <Header onClick={() => navigate(`/${post.author?.username}`)}>
           <AuthorImg src={post.author.picture.url} alt={post.author.username} />
           <AuthorMeta>
-            <AuthorName>{post.author.name}</AuthorName>
+            <AuthorName
+              ref={authorRef}
+              onMouseOver={(e) => {
+                delay();
+                updateTooltipCoords(e.target);
+              }}
+              onMouseOut={() => setOpenProfile(false)}
+            >
+              {post.author.name}
+            </AuthorName>
             <CreateAt>
               {formatDate(post.createdAt)}
               {formatDate(post.createdAt) !== formatDate(post.updatedAt) && (
@@ -39,11 +73,7 @@ const Post = ({ post, isFirstPost }) => {
           </AuthorMeta>
         </Header>
         <Title
-          onClick={() =>
-            navigate(
-              `/${post.author.username}/${createPostUrl(post.title, post.id)}`
-            )
-          }
+          onClick={() => navigate(`/${post.author.username}/${post.slug}`)}
         >
           {post.title}
         </Title>
@@ -121,7 +151,7 @@ const Content = tw.div`p-5`;
 const Header = tw.div`flex justify-between items-center w-max gap-4 mb-2`;
 const AuthorImg = tw.img`w-12 h-12 rounded-full cursor-pointer`;
 const AuthorMeta = tw.div``;
-const AuthorName = tw.h4`text-gray-900 rounded-md hover:bg-gray-200 cursor-pointer mb-1`;
+const AuthorName = tw.button`text-gray-900 rounded-md hover:bg-gray-100 cursor-pointer mb-1 pl-4 pr-4 py-2 -m-4`;
 const CreateAt = tw.p`text-sm text-gray-500`;
 const UpdateAt = tw.span`text-sm text-gray-500`;
 const Title = tw.h1`ml-16 text-2xl font-bold mb-2 hover:text-blue-900 cursor-pointer`;

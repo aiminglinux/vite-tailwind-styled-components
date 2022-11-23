@@ -1,14 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { formatDate } from "../../../utils/string";
 import Button from "../../../components/Button/Button";
 
-const AuthorDetail = ({ author }) => {
+const AuthorDetail = ({ author, more = true }) => {
+  const navigate = useNavigate();
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 p-4 border rounded-md bg-slate-50	 border-t-[2rem] border-t-gray-300">
         <div className="-mt-8">
-          <Link to="#!" className="flex items-end space-x-2">
+          <div className="flex items-end space-x-2">
             <span className="border border-gray-600 rounded-full">
               <img
                 src={author.picture?.url}
@@ -16,8 +17,13 @@ const AuthorDetail = ({ author }) => {
                 className="w-12 h-12 rounded-full"
               />
             </span>
-            <span className="text-xl font-medium">{author.name}</span>
-          </Link>
+            <span
+              className="text-xl font-medium hover:text-blue-600 cursor-pointer"
+              onClick={() => navigate(`/${author?.username}`)}
+            >
+              {author.name}
+            </span>
+          </div>
         </div>
         <div>
           <Button hasBg isFull>
@@ -52,38 +58,40 @@ const AuthorDetail = ({ author }) => {
           </ul>
         </div>
       </div>
-      <div>
-        <div className="bg-slate-50	 rounded-md border">
-          <div className="border-b p-4">
-            <h3 className="font-semibold text-xl">
-              More from{" "}
-              <span className="text-blue-600 hover:cursor-pointer">
-                {author.name}
-              </span>
-            </h3>
-          </div>
-          <div className="p-4 border-b">
-            <p className="text-gray-600">
-              How to use JavaScript Ternary Operator?
-            </p>
-            <p className="text-sm text-gray-500">#endregion</p>
-          </div>
-          <div className="p-4 border-b">
-            <p className="text-gray-600">
-              How to use JavaScript Ternary Operator?
-            </p>
-            <p className="text-sm text-gray-500">
-              #javascript #webdev #programming #opensource
-            </p>
-          </div>
-          <div className="p-4">
-            <p className="text-gray-600">
-              How to use JavaScript Ternary Operator?
-            </p>
-            <p className="text-sm text-gray-500">#javascript #webdev</p>
+      {more && (
+        <div>
+          <div className="bg-slate-50	 rounded-md border">
+            <div className="border-b p-4">
+              <h3 className="font-semibold text-xl">
+                More from{" "}
+                <span className="text-blue-600 hover:cursor-pointer">
+                  {author.name}
+                </span>
+              </h3>
+            </div>
+            <div className="p-4 border-b">
+              <p className="text-gray-600">
+                How to use JavaScript Ternary Operator?
+              </p>
+              <p className="text-sm text-gray-500">#endregion</p>
+            </div>
+            <div className="p-4 border-b">
+              <p className="text-gray-600">
+                How to use JavaScript Ternary Operator?
+              </p>
+              <p className="text-sm text-gray-500">
+                #javascript #webdev #programming #opensource
+              </p>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-600">
+                How to use JavaScript Ternary Operator?
+              </p>
+              <p className="text-sm text-gray-500">#javascript #webdev</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

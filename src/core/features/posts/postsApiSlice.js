@@ -3,7 +3,8 @@ import apiSlice from "../api/apiSlice";
 const postsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: (id) => `/posts${id ? `/bookmarked/${id}` : ""}`,
+      // query: (id) => `/posts${id ? `/bookmarked/${id}` : ""}`,
+      query: () => `/posts`,
       providesTags: (result, err, args) =>
         result
           ? [
@@ -53,6 +54,13 @@ const postsApiSlice = apiSlice.injectEndpoints({
         );
       },
     }),
+    deletePost: builder.mutation({
+      query: ({ url }) => ({
+        url: `posts/${url}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, err, { id }) => [{ type: "Post", id: id }],
+    }),
   }),
   overrideExisting: true,
 });
@@ -62,6 +70,7 @@ export const {
   useGetPostQuery,
   useGetPostsQuery,
   useUpdatePostMutation,
+  useDeletePostMutation,
 } = postsApiSlice;
 
 export default postsApiSlice;

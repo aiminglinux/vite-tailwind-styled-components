@@ -19,7 +19,14 @@ const defaultValues = {
 };
 
 const postSchema = yup.object().shape({
-  title: yup.string().required("Title: cannot be blank"),
+  title: yup
+    .string()
+    .min(5, "Title: Title too short")
+    .required("Title: cannot be blank"),
+  content: yup
+    .string()
+    .min(20, "Content: Please lengthen your post at least 20 charactors!")
+    .required("Content: cannot be blank"),
 });
 
 const CreatePost = () => {
@@ -78,6 +85,7 @@ const CreatePost = () => {
                 </h1>
                 <ul className="text-lg">
                   <li>&gt;&gt; {errors.title.message}</li>
+                  {errors.content && <li>&gt;&gt; {errors.content.message}</li>}
                 </ul>
               </div>
             )}

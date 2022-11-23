@@ -73,7 +73,7 @@ const UserAccount = () => {
           )}
         </div>
         <div className="flex flex-col space-y-2">
-          <label htmlFor="password2">Password</label>
+          <label htmlFor="password2">Re-type password</label>
           <input
             {...register("password2")}
             name="password2"

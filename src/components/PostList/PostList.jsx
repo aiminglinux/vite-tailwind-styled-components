@@ -4,16 +4,6 @@ import Skeleton from "../Skeleton/Skeleton";
 import Post from "./components/Post";
 import NoContent from "../NotFound/NoContent";
 
-// const PostList = ({ isFetching, posts, enableImage = true }) => {
-//   return (
-//     <div className="flex flex-col space-y-4">
-//       {[1, 2, 3, 4, 5].map((a) => (
-//         <Skeleton key={a} isFirstPost={enableImage && a === 1} />
-//       ))}
-//     </div>
-//   );
-// };
-
 const PostList = ({ isFetching, posts, enableImage = true }) => {
   return (
     <>

@@ -18,6 +18,7 @@ import PostDetail from "../pages/PostDetail/PostDetail";
 import Profile from "../pages/Profile/Profile";
 import ReadingList from "../pages/ReadingList/ReadingList";
 import Register from "../pages/Register/Register";
+import EditPost from "../pages/EditPost/EditPost";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -40,15 +41,14 @@ const AppRoutes = () => {
         <Route path=":username">
           <Route index element={<Profile />} />
           <Route path="*" element={<NotFound />} />
-
-          <Route path=":postUrl">
+          <Route path=":postSlug">
             <Route index element={<PostDetail />} />
+            <Route element={<RequireAuthen />}>
+              <Route path="edit" element={<EditPost />} />
+              <Route path="confirm/:confirmType" element={<Confirmation />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
-          {/* <Route path=":postSlug">
-            <Route index element={<PostDetail />} />
-            <Route path="*" element={<NotFound />} />
-          </Route> */}
         </Route>
         <Route path="auth">
           <Route path="login" element={<Login />} />
