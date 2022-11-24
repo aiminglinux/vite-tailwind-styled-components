@@ -8,7 +8,7 @@ import RequireAuthen from "../components/RequireAuthen/RequireAuthen";
 import DefaultLayout from "../Layouts/DefaultLayout/DefaultLayout";
 import Home from "../Layouts/Home/Home";
 import Confirmation from "../pages/Confirmation/Confirmation";
-import CreatePost from "../pages/CreatePost/CreatePost";
+import CreatePost from "../pages/PostEditor/PostEditor";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import UserAccount from "../pages/EditProfile/components/UserAccount";
 import UserProfile from "../pages/EditProfile/components/UserProfile";
@@ -26,6 +26,7 @@ const AppRoutes = () => {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [location]);
+
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<DefaultLayout />}>
@@ -44,8 +45,7 @@ const AppRoutes = () => {
           <Route path=":postSlug">
             <Route index element={<PostDetail />} />
             <Route element={<RequireAuthen />}>
-              <Route path="edit" element={<EditPost />} />
-              <Route path="confirm/:confirmType" element={<Confirmation />} />
+              <Route path="edit" element={<CreatePost />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
@@ -53,9 +53,7 @@ const AppRoutes = () => {
         <Route path="auth">
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="confirm/:confirmType" element={<Confirmation />} />
         </Route>
-        {/* <Route path="profile" element={<Profile />} /> */}
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="reading-list" element={<ReadingList />} />
         <Route path="settings" element={<EditProfile />} />

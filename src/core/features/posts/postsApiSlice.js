@@ -35,10 +35,10 @@ const postsApiSlice = apiSlice.injectEndpoints({
           : [{ type: "Post", id: "List" }],
     }),
     updatePost: builder.mutation({
-      query: ({ meta, data }) => ({
-        url: `/posts/${url}`,
+      query: ({ meta, patch }) => ({
+        url: `/posts/${meta.url}`,
         method: "PATCH",
-        body: data,
+        body: patch,
       }),
       invalidatesTags: (result, err, { meta }) => [{ type: Post, id: meta.id }],
       async onQueryStarted({ meta: { url } }, { dispatch, queryFulfilled }) {

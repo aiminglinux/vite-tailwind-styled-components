@@ -3,6 +3,7 @@ import tw from "twin.macro";
 import debounce from "lodash/debounce";
 
 import { formatDate } from "../../../utils/string";
+import { calcReadingTime } from "../../../utils/readingTime";
 
 import { useRef, useState } from "react";
 import ProfileCard from "../../Portal/Component/ProfileCard";
@@ -17,8 +18,8 @@ const Post = ({ post, isFirstPost }) => {
   const updateTooltipCoords = (target) => {
     const rect = target.getBoundingClientRect();
     setCoords({
-      left: rect.x, // add half the width of the button for centering
-      top: rect.y + window.scrollY - 25, // add scrollY offset, as soon as getBountingClientRect takes on screen coords
+      left: rect.x,
+      top: rect.y + window.scrollY - 25,
     });
   };
 
@@ -27,7 +28,7 @@ const Post = ({ post, isFirstPost }) => {
     // alert("done");
   };
 
-  const delay = debounce(handleMouseOver, 500);
+  const delay = debounce(handleMouseOver, 1000);
   // console.log(post);
 
   return (
@@ -122,7 +123,9 @@ const Post = ({ post, isFirstPost }) => {
             </div>
           </Reactions>
           <div className="flex h-full justify-between items-center">
-            <small className="m-2">11 min read</small>
+            <small className="m-2">
+              {calcReadingTime(post.body)} mins read
+            </small>
             <small className="h-full text-black rounded-md hover:bg-blue-100 hover:text-blue-400">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +154,7 @@ const Content = tw.div`p-5`;
 const Header = tw.div`flex justify-between items-center w-max gap-4 mb-2`;
 const AuthorImg = tw.img`w-12 h-12 rounded-full cursor-pointer`;
 const AuthorMeta = tw.div``;
-const AuthorName = tw.button`text-gray-900 rounded-md hover:bg-gray-100 cursor-pointer mb-1 pl-4 pr-4 py-2 -m-4`;
+const AuthorName = tw.button`text-gray-900 rounded-md cursor-pointer cursor-pointer mb-1 pl-4 pr-4 py-2 -m-4`;
 const CreateAt = tw.p`text-sm text-gray-500`;
 const UpdateAt = tw.span`text-sm text-gray-500`;
 const Title = tw.h1`ml-16 text-2xl font-bold mb-2 hover:text-blue-900 cursor-pointer`;

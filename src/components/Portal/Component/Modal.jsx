@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
 import Portal from "../Portal";
 import Backdrop from "./Backrop";
 
@@ -41,8 +43,11 @@ function Modal({
   return (
     <Portal>
       <Backdrop />
-      <div
-        className="absolute z-50 h-fit bg-slate-50 w-2/3 lg:w-1/2 top-1/2 lg:top-1/4 mx-auto text-center inset-0 rounded-md"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed z-50 h-fit bg-slate-50 w-2/3 lg:w-1/2 top-1/2 -translate-y-1/2 mx-auto text-center inset-0 rounded-md shadow-md"
         ref={nodeRef}
       >
         <div className="space-y-4">
@@ -51,22 +56,26 @@ function Modal({
           </h1>
           <p>{promptText}</p>
           <div className="space-x-4 py-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.8 }}
               onClick={handlePromptAction}
               className=" text-red-600 border rounded-md border-solid p-2 hover:bg-red-100"
             >
               Yes, {action}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.8 }}
               onClick={() => setOn(false)}
               className="border rounded-md border-solid p-2 hover:opacity-60"
             >
               Cancel
-            </button>
+            </motion.button>
           </div>
         </div>
         <div className="modal-content">{children}</div>
-      </div>
+      </motion.div>
     </Portal>
   );
 }

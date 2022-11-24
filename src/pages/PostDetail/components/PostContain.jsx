@@ -1,22 +1,21 @@
 import {
   forwardRef,
-  useRef,
-  useImperativeHandle,
   useEffect,
+  useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import { BsChevronExpand, BsThreeDotsVertical } from "react-icons/bs";
-import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { selectCurrentUser } from "../../../core/features/auth/authSlice";
 
-import { formatDate } from "../../../utils/string";
-import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
 import Button from "../../../components/Button/Button";
-import Backdrop from "../../../components/Backdrop/Backdrop";
+import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
 import Modal from "../../../components/Portal/Component/Modal";
 import useToggle from "../../../hooks/useToggle";
+import { formatDate } from "../../../utils/string";
 
 const PostContent = forwardRef(({ post }, ref) => {
   const { username } = useSelector(selectCurrentUser);
@@ -25,6 +24,7 @@ const PostContent = forwardRef(({ post }, ref) => {
   const menuRef = useRef(null);
   const [postMenu, togglePostMenu] = useToggle(false);
   const [openModal, setOpenModal] = useState(false);
+
   useImperativeHandle(ref, () => ({
     scrollIntoView: () => {
       cmtRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -33,7 +33,7 @@ const PostContent = forwardRef(({ post }, ref) => {
 
   useEffect(() => {
     const closePostMenu = (e) => {
-      if (menuRef.current.contains(e.target)) return;
+      if (menuRef.current?.contains(e.target)) return;
       togglePostMenu(false);
     };
     document.addEventListener("mousedown", closePostMenu);
@@ -73,7 +73,9 @@ const PostContent = forwardRef(({ post }, ref) => {
                     {formatDate(post.createdAt)}
                     {formatDate(post.createdAt) !==
                       formatDate(post.updatedAt) && (
-                      <span>{`Updated ${formatDate(post.updatedAt)}`}</span>
+                      <span className="pl-2">{`Updated at ${formatDate(
+                        post.updatedAt
+                      )}`}</span>
                     )}
                   </p>
                 </div>

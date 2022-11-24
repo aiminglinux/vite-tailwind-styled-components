@@ -24,7 +24,7 @@ const ProfileCard = ({
         onMouseOver={() => setOn(true)}
         onMouseLeave={() => setOn(false)}
         style={{ ...coords }}
-        className="absolute h-32 text-centerrounded-md bg-slate-400 rounded-md w-60"
+        className="absolute h-32 text-centerrounded-md bg-slate-400 rounded-md w-72"
       >
         <div>{children}</div>
       </div>

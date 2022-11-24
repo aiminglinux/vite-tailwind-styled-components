@@ -2,21 +2,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { selectCurrentUser } from "../../core/features/auth/authSlice";
-import { useCreatePostMutation } from "../../core/features/posts/postsApiSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
+import {
+  useCreatePostMutation,
+  useGetPostQuery,
+  useUpdatePostMutation,
+} from "../../core/features/posts/postsApiSlice";
 
 import useBase64 from "../../hooks/useBase64";
 import useRequireAuthen from "../../hooks/useRequireAuthen";
 
-import ContentEditor from "./components/Editor";
 import Button from "../../components/Button/Button";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-
-const defaultValues = {
-  content: "",
-};
+import ContentEditor from "./components/Editor";
 
 const postSchema = yup.object().shape({
   title: yup
@@ -29,7 +29,24 @@ const postSchema = yup.object().shape({
     .required("Content: cannot be blank"),
 });
 
-const CreatePost = () => {
+const PostEditor = () => {
+  const { username, postSlug } = useParams();
+  const newMode = !postSlug;
+
+  const { data: post } = useGetPostQuery(
+    { url: `${username}/${postSlug}` },
+    { refetchOnMountOrArgChange: true, skip: newMode }
+  );
+
+  const navigate = useNavigate();
+  const [file, setFile] = useState(post?.image?.url || undefined);
+  const previewURL = useBase64(file);
+  const { isAuthed, handleAuth } = useRequireAuthen();
+  const currentUser = useSelector(selectCurrentUser);
+  const [createNewPost, { isLoading: createLoading, isError }] =
+    useCreatePostMutation();
+  const [updatePost, { isLoading: patchLoading }] = useUpdatePostMutation();
+
   const {
     register,
     handleSubmit,
@@ -37,21 +54,23 @@ const CreatePost = () => {
     formState: { errors },
   } = useForm({
     mode: "onBlur",
-    defaultValues,
+    defaultValues: {
+      content: post?.body || "",
+      title: post?.title || "",
+      tags: post?.tags.map((tag) => tag.name).join(", ") || "",
+      file: previewURL,
+    },
     resolver: yupResolver(postSchema),
   });
 
-  const navigate = useNavigate();
-  const [file, setFile] = useState();
-  const previewURL = useBase64(file);
-  const { isAuthed, handleAuth } = useRequireAuthen();
-  const currentUser = useSelector(selectCurrentUser);
-  const [createNewPost, { isLoading, isError }] = useCreatePostMutation();
+  const onSubmit = (data) => {
+    return newMode ? createPost(data) : patchPost(data);
+  };
 
-  const handlePostSubmit = async (data) => {
+  const createPost = async (data) => {
     const { title, content, tags } = data;
 
-    // console.log(content);
+    console.log(data);
     if (isAuthed) {
       try {
         await createNewPost({
@@ -68,14 +87,42 @@ const CreatePost = () => {
     } else handleAuth();
   };
 
+  const patchPost = async (data) => {
+    const { title, content, tags } = data;
+    if (isAuthed) {
+      try {
+        await updatePost({
+          meta: {
+            url: `${username}/${postSlug}`,
+          },
+          patch: {
+            title,
+            body: content,
+            file: previewURL,
+            tags,
+            authorUsername: username,
+            image: {
+              url: post.image.url,
+              publicId: post.image.publicId,
+            },
+          },
+        });
+
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
+    } else handleAuth();
+  };
+
   return (
     <Fragment>
-      {isLoading ? (
+      {createLoading || patchLoading ? (
         <LoadingSpinner />
       ) : (
         <form
           className="border border-solid rounded-md bg-white max-w-screen-lg mx-auto p-4"
-          onSubmit={handleSubmit(handlePostSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <div className="space-y-4">
             {errors.title && (
@@ -170,7 +217,7 @@ const CreatePost = () => {
 
             <div>
               <Button isFull hasBg>
-                Post
+                {newMode ? "Post" : "Update"}
               </Button>
             </div>
           </div>
@@ -180,4 +227,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default PostEditor;

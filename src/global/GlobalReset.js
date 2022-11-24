@@ -6,7 +6,7 @@ const GlobalReset = createGlobalStyle`
 *::before,
 *::after {
   box-sizing: border-box;
-  transition: all .25s;
+  
 }
 path,
 svg,
