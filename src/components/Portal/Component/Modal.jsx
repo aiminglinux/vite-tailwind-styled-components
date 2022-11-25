@@ -12,7 +12,6 @@ function Modal({
   handleAction,
   title,
   promptText,
-  navigate,
   action = "Delete it",
 }) {
   const nodeRef = useRef(null);
@@ -47,14 +46,16 @@ function Modal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed z-50 h-fit bg-slate-50 w-2/3 lg:w-1/2 top-1/2 -translate-y-1/2 mx-auto text-center inset-0 rounded-md shadow-md"
+        className="fixed z-50 h-fit bg-slate-100 w-2/3 lg:w-1/2 top-1/2 -translate-y-1/2 mx-auto text-center inset-0 rounded-md shadow-md"
         ref={nodeRef}
       >
-        <div className="space-y-4">
-          <h1 className="bg-blue-200 py-2 text-xl font-semibold rounded-t-md">
+        <div className="">
+          <h1 className="bg-blue-600 py-2 text-xl font-semibold rounded-t-md">
             {title}
           </h1>
-          <p>{promptText}</p>
+          <p className="border-b-2 border-solid font-medium p-2 bg-yellow-200">
+            {promptText}
+          </p>
           <div className="space-x-4 py-2">
             <motion.button
               whileHover={{ scale: 1.1 }}

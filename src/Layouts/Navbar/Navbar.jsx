@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import tw, { styled, theme } from "twin.macro";
@@ -209,4 +209,4 @@ const Avatar = styled.img`
   ${tw`w-12 h-12 rounded-full object-cover overflow-hidden cursor-pointer hover:opacity-80`}
 `;
 
-export default Navbar;
+export default memo(Navbar);

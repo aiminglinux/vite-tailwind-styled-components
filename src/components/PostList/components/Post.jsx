@@ -7,7 +7,7 @@ import { calcReadingTime } from "../../../utils/readingTime";
 
 import { useRef, useState } from "react";
 import ProfileCard from "../../Portal/Component/ProfileCard";
-import AuthorDetail from "../../../pages/PostDetail/components/AuthorDetail";
+import AuthorDetail from "../../../pages/SinglePostView/components/AuthorDetail";
 
 const Post = ({ post, isFirstPost }) => {
   const authorRef = useRef();
@@ -40,7 +40,7 @@ const Post = ({ post, isFirstPost }) => {
           isOpen={openProfile}
           updateTooltipCoords={() => updateTooltipCoords(avaRef.current)}
         >
-          <AuthorDetail author={post.author} more={false} />
+          <AuthorDetail author={post.author} />
         </ProfileCard>
       )}
       {isFirstPost && (

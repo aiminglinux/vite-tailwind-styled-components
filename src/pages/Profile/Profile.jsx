@@ -130,7 +130,7 @@ const Profile = () => {
               <div className="bg-white rounded-md space-y-4 p-4">
                 <div className="flex space-x-2 text-gray-600">
                   <AiOutlineFileText size={24} />
-                  <span>1248 posts published</span>
+                  <span>{previewUser.posts.length} posts published</span>
                 </div>
                 <div className="flex space-x-2 text-gray-600">
                   <AiOutlineComment size={24} />

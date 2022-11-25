@@ -14,9 +14,9 @@ import UserAccount from "../pages/EditProfile/components/UserAccount";
 import UserProfile from "../pages/EditProfile/components/UserProfile";
 import EditProfile from "../pages/EditProfile/EditProfile";
 import Login from "../pages/Login/Login";
-import PostDetail from "../pages/PostDetail/PostDetail";
 import Profile from "../pages/Profile/Profile";
 import ReadingList from "../pages/ReadingList/ReadingList";
+import PostContainer from "../pages/SinglePostView/PostContainer";
 import Register from "../pages/Register/Register";
 import EditPost from "../pages/EditPost/EditPost";
 
@@ -43,7 +43,7 @@ const AppRoutes = () => {
           <Route index element={<Profile />} />
           <Route path="*" element={<NotFound />} />
           <Route path=":postSlug">
-            <Route index element={<PostDetail />} />
+            <Route index element={<PostContainer />} />
             <Route element={<RequireAuthen />}>
               <Route path="edit" element={<CreatePost />} />
             </Route>

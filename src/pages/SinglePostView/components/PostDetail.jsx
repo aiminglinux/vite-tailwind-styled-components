@@ -10,14 +10,15 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { selectCurrentUser } from "../../../core/features/auth/authSlice";
-
-import Button from "../../../components/Button/Button";
-import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
-import Modal from "../../../components/Portal/Component/Modal";
 import useToggle from "../../../hooks/useToggle";
 import { formatDate } from "../../../utils/string";
 
-const PostContent = forwardRef(({ post }, ref) => {
+import Button from "../../../components/Button/Button";
+import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
+import Modal from "../../../components/Portal/Component/Modal";
+
+const PostDetail = forwardRef(({ post, onDelete }, ref) => {
   const { username } = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const cmtRef = useRef();
@@ -40,6 +41,10 @@ const PostContent = forwardRef(({ post }, ref) => {
     return () => document.removeEventListener("mousedown", closePostMenu);
   }, []);
 
+  const handleDeletePost = () => {
+    if (onDelete) onDelete(post.slug);
+  };
+
   return (
     <>
       {openModal && (
@@ -49,6 +54,7 @@ const PostContent = forwardRef(({ post }, ref) => {
           title={`Delete post?`}
           promptText={`Are you sure to delete this post? This will remove the post
             and can't be undone.`}
+          handleAction={handleDeletePost}
         />
       )}
 
@@ -68,7 +74,12 @@ const PostContent = forwardRef(({ post }, ref) => {
                   className="w-12 h-12 rounded-full"
                 />
                 <div>
-                  <h4 className="text-md font-semibold">{post.author.name}</h4>
+                  <h4
+                    className="text-md font-semibold hover:text-blue-600 cursor-pointer"
+                    onClick={() => navigate(`/${post?.author?.username}`)}
+                  >
+                    {post.author.name}
+                  </h4>
                   <p className="text-sm text-gray-500">
                     {formatDate(post.createdAt)}
                     {formatDate(post.createdAt) !==
@@ -141,4 +152,4 @@ const PostContent = forwardRef(({ post }, ref) => {
   );
 });
 
-export default PostContent;
+export default PostDetail;

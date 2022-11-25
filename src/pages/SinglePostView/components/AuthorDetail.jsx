@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { formatDate } from "../../../utils/string";
 import Button from "../../../components/Button/Button";
+import { formatDate } from "../../../utils/string";
 
-const AuthorDetail = ({ author, more = true }) => {
+const AuthorDetail = ({ author }) => {
   const navigate = useNavigate();
+  // console.log("Author detail");
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 p-4 border rounded-md bg-slate-50	 border-t-[2rem] border-t-gray-300">
@@ -58,40 +59,37 @@ const AuthorDetail = ({ author, more = true }) => {
           </ul>
         </div>
       </div>
-      {more && (
+      {/* {more && (
         <div>
           <div className="bg-slate-50	 rounded-md border">
             <div className="border-b p-4">
               <h3 className="font-semibold text-xl">
                 More from{" "}
-                <span className="text-blue-600 hover:cursor-pointer">
+                <span
+                  className="text-blue-600 hover:cursor-pointer"
+                  onClick={() => navigate(`/${author?.username}`)}
+                >
                   {author.name}
                 </span>
               </h3>
             </div>
-            <div className="p-4 border-b">
-              <p className="text-gray-600">
-                How to use JavaScript Ternary Operator?
-              </p>
-              <p className="text-sm text-gray-500">#endregion</p>
-            </div>
-            <div className="p-4 border-b">
-              <p className="text-gray-600">
-                How to use JavaScript Ternary Operator?
-              </p>
-              <p className="text-sm text-gray-500">
-                #javascript #webdev #programming #opensource
-              </p>
-            </div>
-            <div className="p-4">
-              <p className="text-gray-600">
-                How to use JavaScript Ternary Operator?
-              </p>
-              <p className="text-sm text-gray-500">#javascript #webdev</p>
-            </div>
+            {postsByUser.posts.map((post) => (
+              <div
+                key={post.id}
+                className="p-4 border-b hover:bg-white cursor-pointer"
+                onClick={() =>
+                  navigate(`/${post.author.username}/${post.slug}`)
+                }
+              >
+                <p className="text-gray-600 hover:text-blue-500">
+                  {post.title}
+                </p>
+                <p className="text-sm text-gray-500">#endregion</p>
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
