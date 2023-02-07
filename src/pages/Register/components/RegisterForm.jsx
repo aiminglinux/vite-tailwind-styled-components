@@ -185,7 +185,7 @@ const RegisterForm = ({ onSubmit }) => {
         </Button>
         <div className="relative after:absolute after:content-[''] after:w-full after:border after:left-0 after:top-[50%]">
           <span className="z-50 inline-block bg-white relative ml-[50%] translate-x-[-50%] px-2">
-            Already have an account? <Login to="/login">Log in</Login>
+            Already have an account? <Login>Log in</Login>
           </span>
         </div>
       </Wrapper>
@@ -207,7 +207,8 @@ const Avatar = styled.div`
 `;
 
 const Login = styled(Link).attrs({
-  to: "/login",
+  to: "/auth/login",
+  replace: "true",
 })`
   ${tw`text-blue-500`}
 `;

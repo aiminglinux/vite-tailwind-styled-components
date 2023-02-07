@@ -21,12 +21,13 @@ import NotFound from "../../components/NotFound/NotFound";
 const Profile = () => {
   const currentUser = useSelector(selectCurrentUser);
   const navigate = useNavigate();
-  const { username } = useParams();
-  const { data: previewUser, isLoading } = useGetUserQuery(username, {
+  const { userId } = useParams();
+  console.log(userId);
+  const { data: previewUser, isLoading } = useGetUserQuery(userId, {
     refetchOnMountOrArgChange: true,
   });
 
-  // console.log(previewUser.posts);
+  // return console.log(previewUser);
   return (
     <RouteWrapper>
       {isLoading ? (
@@ -134,11 +135,11 @@ const Profile = () => {
                 </div>
                 <div className="flex space-x-2 text-gray-600">
                   <AiOutlineComment size={24} />
-                  <span>9135 comments written</span>
+                  <span>{previewUser.comments.length} comments written</span>
                 </div>
                 <div className="flex space-x-2 text-gray-600">
                   <HiOutlineHashtag size={24} />
-                  <span>62 tags followed</span>
+                  <span>{previewUser.followedTags.length} tags followed</span>
                 </div>
               </div>
             </aside>

@@ -39,7 +39,7 @@ const AppRoutes = () => {
             <Route path="user-account" element={<UserAccount />} />
           </Route>
         </Route>
-        <Route path=":username">
+        <Route path="users/:userId">
           <Route index element={<Profile />} />
           <Route path="*" element={<NotFound />} />
           <Route path=":postSlug">
@@ -49,6 +49,13 @@ const AppRoutes = () => {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
+        </Route>
+        <Route path="posts/:postId">
+          <Route index element={<PostContainer />} />
+          <Route element={<RequireAuthen />}>
+            <Route path="edit" element={<CreatePost />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="auth">
           <Route path="login" element={<Login />} />

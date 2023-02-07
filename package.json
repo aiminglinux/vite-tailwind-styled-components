@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.8",
-    "@reduxjs/toolkit": "^1.8.6",
+    "@reduxjs/toolkit": "^1.8.2",
+    "@tippyjs/react": "^4.2.6",
     "draft-js": "^0.11.7",
     "easymde": "^2.18.0",
+    "framer-motion": "^7.6.9",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

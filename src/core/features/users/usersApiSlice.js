@@ -4,7 +4,7 @@ import { setCredentials } from "../auth/authSlice";
 const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUser: builder.query({
-      query: (username) => `/users/${username}`,
+      query: (userId) => `/users/${userId}`,
       providesTags: (result, err, args) =>
         result
           ? [{ type: "User", id: result.id }]

@@ -3,7 +3,6 @@ import apiSlice from "../api/apiSlice";
 const postsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query({
-      // query: (id) => `/posts${id ? `/bookmarked/${id}` : ""}`,
       query: () => `/posts`,
       providesTags: (result, err, args) =>
         result
@@ -14,7 +13,7 @@ const postsApiSlice = apiSlice.injectEndpoints({
           : [{ type: "Post", id: "LIST" }],
     }),
     getPost: builder.query({
-      query: ({ url }) => `/posts/${url}`,
+      query: (postId) => `/posts/${postId}`,
       providesTags: (result, err, args) =>
         result
           ? [{ type: "Post", id: "result.id" }]

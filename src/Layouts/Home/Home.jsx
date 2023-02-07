@@ -14,6 +14,7 @@ function Home() {
   const { data: posts, isFetching } = useGetPostsQuery(null, {
     refetchOnMountOrArgChange: true,
   });
+
   return (
     <Wrapper>
       <LeftSideBar />

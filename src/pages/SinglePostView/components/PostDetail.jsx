@@ -17,6 +17,8 @@ import Button from "../../../components/Button/Button";
 import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
 import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 import Modal from "../../../components/Portal/Component/Modal";
+import Comment from "./Comment";
+import CommentList from "../../../components/Comment/CommentList";
 
 const PostDetail = forwardRef(({ post, onDelete }, ref) => {
   const { username } = useSelector(selectCurrentUser);
@@ -59,11 +61,13 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
       )}
 
       <div className="border bg-white rounded-md border-solid">
-        <img
-          src={post?.image?.url}
-          alt={post.title}
-          className="md:rounded-t-md w-full h-96 "
-        />
+        {post?.image && (
+          <img
+            src={post?.image?.url}
+            alt={post.title}
+            className="md:rounded-t-md w-full h-96 "
+          />
+        )}
         <div>
           <div className="p-4 md:px-12 md:py-8 space-y-4">
             <div className="flex gap-2 justify-between items-center">
@@ -139,13 +143,16 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
         >
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-semibold">Lastest comment (0)</h2>
+              <h2 className="text-xl font-semibold">
+                Comments ({post.comments.length})
+              </h2>
               <button className="p-4 hover:bg-indigo-100 hover:rounded-md">
                 <BsChevronExpand size={16} />
               </button>
             </div>
             <Button>Subcribe</Button>
           </div>
+          <CommentList />
         </div>
       </div>
     </>

@@ -15,6 +15,8 @@ const Post = ({ post, isFirstPost }) => {
   const [coords, setCoords] = useState({});
   const navigate = useNavigate();
 
+  // console.log(post);
+
   const updateTooltipCoords = (target) => {
     const rect = target.getBoundingClientRect();
     setCoords({
@@ -28,7 +30,7 @@ const Post = ({ post, isFirstPost }) => {
     // alert("done");
   };
 
-  const delay = debounce(handleMouseOver, 1000);
+  const delay = debounce(handleMouseOver, 3000);
   // console.log(post);
 
   return (
@@ -43,7 +45,7 @@ const Post = ({ post, isFirstPost }) => {
           <AuthorDetail author={post.author} />
         </ProfileCard>
       )}
-      {isFirstPost && (
+      {isFirstPost && post?.image && (
         <img
           src={post.image?.url}
           alt=""
@@ -52,7 +54,7 @@ const Post = ({ post, isFirstPost }) => {
         />
       )}
       <Content>
-        <Header onClick={() => navigate(`/${post.author?.username}`)}>
+        <Header onClick={() => navigate(`/users/${post.author?._id}`)}>
           <AuthorImg src={post.author.picture.url} alt={post.author.username} />
           <AuthorMeta>
             <AuthorName
@@ -73,11 +75,7 @@ const Post = ({ post, isFirstPost }) => {
             </CreateAt>
           </AuthorMeta>
         </Header>
-        <Title
-          onClick={() => navigate(`/${post.author.username}/${post.slug}`)}
-        >
-          {post.title}
-        </Title>
+        <Title onClick={() => navigate(`posts/${post.id}`)}>{post.title}</Title>
         <TagList>
           <Tag>#career</Tag>
           <Tag href="#!">
@@ -102,7 +100,10 @@ const Post = ({ post, isFirstPost }) => {
                   d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
                 />
               </svg>
-              <span className="text-base lg:text-sm"> 41 Reactions</span>
+              <span className="text-base lg:text-sm">
+                {" "}
+                {post.likes.length} Reactions
+              </span>
             </div>
             <div className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-gray-200 cursor-pointer">
               <svg
@@ -119,7 +120,9 @@ const Post = ({ post, isFirstPost }) => {
                   d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
                 />
               </svg>
-              <span className="text-base lg:text-sm">18 Comments</span>
+              <span className="text-base lg:text-sm">
+                {post.comments.length} Comments
+              </span>
             </div>
           </Reactions>
           <div className="flex h-full justify-between items-center">

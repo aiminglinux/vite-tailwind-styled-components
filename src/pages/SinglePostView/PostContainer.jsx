@@ -18,35 +18,38 @@ import More from "./components/More";
 const PostContainer = () => {
   const commentRef = useRef(null);
   const navigate = useNavigate();
-  const { username, postSlug } = useParams();
+  const { postId } = useParams();
   const { isAuthed, handleAuth } = useRequireAuthen();
 
   const [deletePost, { isLoading: deletePostLoading }] =
     useDeletePostMutation();
 
-  const { data: post, isLoading: singlePostLoading } = useGetPostQuery(
-    { url: `${username}/${postSlug}` },
-    { refetchOnMountOrArgChange: true }
-  );
+  const { data: post, isLoading: singlePostLoading } = useGetPostQuery(postId, {
+    refetchOnMountOrArgChange: true,
+  });
 
-  const { data: postsByUser, isLoading: postsByUserLoading } = useGetUserQuery(
-    username,
-    { refetchOnMountOrArgChange: true }
-  );
+  console.log("Post ID: ", postId);
+  console.log("Post: ", post);
+
+  // const { data: postsByUser, isLoading: postsByUserLoading } = useGetUserQuery(
+  //   username,
+  //   { refetchOnMountOrArgChange: true }
+  // );
 
   const onDelete = async (slug) => {
-    if (isAuthed) {
-      try {
-        await deletePost({ url: `${username}/${slug}` });
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-      }
-    } else handleAuth();
+    // if (isAuthed) {
+    //   try {
+    //     await deletePost({ url: `${username}/${slug}` });
+    //     navigate("/");
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // } else handleAuth();
   };
 
-  const isLoading =
-    singlePostLoading || deletePostLoading || postsByUserLoading;
+  // const isLoading =
+  //   singlePostLoading || deletePostLoading || postsByUserLoading;
+  const isLoading = singlePostLoading;
 
   // !isLoading && console.log(postsByUser);
 
@@ -64,7 +67,7 @@ const PostContainer = () => {
           </main>
           <aside className="hidden lg:block space-y-4">
             <AuthorDetail author={post.author} />
-            <More author={postsByUser} />
+            {/* <More author={postsByUser} /> */}
           </aside>
         </div>
       )}
