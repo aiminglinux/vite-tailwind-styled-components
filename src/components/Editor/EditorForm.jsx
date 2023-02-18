@@ -53,8 +53,8 @@ const EditorForm = () => {
   };
 
   return (
-    <Fragment>
-      <div className="bg-gray-100 flex items-center p-2">
+    <div className="border">
+      <div className="bg-gray-200 flex items-center border">
         <BlockStyleToolbar
           editorState={editorState}
           onToggle={toggleBlockType}
@@ -64,25 +64,25 @@ const EditorForm = () => {
           className=" p-2 hover:text-blue-300 hover:bg-blue-200 hover:rounded-md"
           onClick={onBoldClick}
         >
-          <AiOutlineBold size={24} />
+          <AiOutlineBold size={20} />
         </button>
         <button
           className=" p-2 hover:text-blue-300 hover:bg-blue-200 hover:rounded-md"
           onClick={onItalicClick}
         >
-          <AiOutlineItalic size={24} />
+          <AiOutlineItalic size={20} />
         </button>
         <button
           className=" p-2 hover:text-blue-300 hover:bg-blue-200 hover:rounded-md"
           onClick={onUnderlineClick}
         >
-          <AiOutlineUnderline size={24} />
+          <AiOutlineUnderline size={20} />
         </button>
         <button
           className=" p-2 hover:text-blue-300 hover:bg-blue-200 hover:rounded-md"
           onClick={onStrikethroughClick}
         >
-          <AiOutlineStrikethrough size={24} />
+          <AiOutlineStrikethrough size={20} />
         </button>
       </div>
       <div className="p-2 min-h-[30%]" onClick={onEditorFocus}>
@@ -91,10 +91,10 @@ const EditorForm = () => {
           onChange={onEditorStateChange}
           handleKeyCommand={handleKeyCommand}
           ref={editorRef}
-          placeholder="Write your post content here..."
+          placeholder="Add to the discussion"
         />
       </div>
-    </Fragment>
+    </div>
   );
 };
 

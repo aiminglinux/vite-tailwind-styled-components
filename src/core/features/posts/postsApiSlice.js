@@ -60,6 +60,18 @@ const postsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, err, { id }) => [{ type: "Post", id: id }],
     }),
+    // postActions: builder.mutation({
+    //   query: ({postId, isLiked}) => ({
+    //     url: `/posts/${postId}/:${action}`,
+    //     method: 'PATCH',
+    //     body: {isLiked}
+    //   }),
+    //   invalidatesTags: (result, err, args) => [{type: 'Post', id: postId}],
+    //   async onQueryStarted({postId}, {dispatch, queryFulfilled}) {
+    //     const {data: updatedPost} = await queryFulfilled
+
+    //   }
+    // })
   }),
   overrideExisting: true,
 });

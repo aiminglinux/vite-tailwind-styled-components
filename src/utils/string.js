@@ -35,3 +35,20 @@ export const formatDate = (timestamp, momented = true) => {
     ? `${date} (${moment(timestamp).startOf("seconds").fromNow()})`
     : date;
 };
+
+export const getReplies = (comments, commentId) => {
+  return (
+    comments &&
+    comments
+      .filter((comment) => comment && comment.parentComment === commentId)
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+  );
+};
+
+export const isLikedByMe = (likes, id) => {
+  if (likes.includes(id)) return true;
+  return false;
+};

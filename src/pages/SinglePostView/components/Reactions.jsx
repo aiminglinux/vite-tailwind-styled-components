@@ -4,23 +4,42 @@ import { Fragment } from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
-const Reactions = ({ commentRef }) => {
+import { isLikedByMe } from "../../../utils/string";
+
+const Reactions = ({ commentRef, post, id }) => {
   const scrollToComment = () => {
     if (commentRef.current) {
       commentRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
+  const isLike = isLikedByMe(post.likes, id);
+  // console.log(isLike);
+
   return (
     <Fragment>
       <div className="grid fixed top-40 w-16">
         <div className="grid grid-flow-raw gap-4 justify-stretch top-10">
-          <Tippy placement="bottom" content="&#x1F970; Like this post">
+          <Tippy
+            placement="bottom"
+            content={`${isLike ? "Unlike this post" : "Like this post"}`}
+          >
             <button className="inline-flex flex-col flex-1 items-center">
-              <span className="p-2 rounded-full hover:bg-pink-100 hover:text-pink-500 transition-none">
-                <RiHeart2Line size={28} />
+              <span
+                className={`hover:animate-ping p-2 rounded-full hover:bg-pink-100 hover:text-pink-500 transition-none ${
+                  isLike ? `border-2 border-pink-500` : ""
+                }`}
+              >
+                {isLike ? (
+                  <RiHeart2Fill
+                    size={28}
+                    className="text-pink-500 rounded-full"
+                  />
+                ) : (
+                  <RiHeart2Line size={28} />
+                )}
               </span>
-              <span>12</span>
+              <span>{post.likes.length}</span>
             </button>
           </Tippy>
           <Tippy placement="bottom" content="&#128172; Jump to comment section">
@@ -31,7 +50,7 @@ const Reactions = ({ commentRef }) => {
               <span className="p-2 rounded-full hover:bg-orange-100 hover:text-orange-500 transition-none">
                 <MdOutlineModeComment size={28} />
               </span>
-              <span>21</span>
+              <span>{post.comments.length}</span>
             </button>
           </Tippy>
           <Tippy placement="bottom" content="&#128278; Bookmark this post">
@@ -39,7 +58,7 @@ const Reactions = ({ commentRef }) => {
               <span className="p-2 rounded-full hover:bg-blue-100 hover:text-blue-500 transition-none">
                 <RiBookmarkLine size={28} />
               </span>
-              <span>6</span>
+              <span>{post.bookmarks.length}</span>
             </button>
           </Tippy>
         </div>

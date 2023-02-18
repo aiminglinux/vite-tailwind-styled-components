@@ -210,7 +210,11 @@ const PostEditor = () => {
               </div>
             </div>
             <div className="prose max-w-none">
-              <ContentEditor name="content" control={control} />
+              <ContentEditor
+                name="content"
+                control={control}
+                placeholder={"Write your awesome post here..."}
+              />
 
               {/* <EditorForm /> */}
             </div>

@@ -34,6 +34,8 @@ function Navbar() {
   const [modal, toggleModal] = useToggle(false);
   const dispatch = useDispatch();
 
+  console.log(currentUser);
+
   useEffect(() => {
     const closeProfileMenu = (e) => {
       if (navBarRef.current.contains(e.target)) return;

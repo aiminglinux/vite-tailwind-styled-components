@@ -1,4 +1,5 @@
 import {
+  createRef,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -17,16 +18,67 @@ import Button from "../../../components/Button/Button";
 import ContentMarkdown from "../../../components/ContentMarkdown/ContentMarkdown";
 import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 import Modal from "../../../components/Portal/Component/Modal";
-import Comment from "./Comment";
+import Comment from "../../../components/Comment/Comment";
 import CommentList from "../../../components/Comment/CommentList";
+import EditorForm from "../../../components/Editor/EditorForm";
 
 const PostDetail = forwardRef(({ post, onDelete }, ref) => {
-  const { username } = useSelector(selectCurrentUser);
+  const { username, id } = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const cmtRef = useRef();
   const menuRef = useRef(null);
+
   const [postMenu, togglePostMenu] = useToggle(false);
   const [openModal, setOpenModal] = useState(false);
+
+  const [comments, setComments] = useState(post.comments);
+  const [replyRef, setReplyRef] = useState({});
+
+  const handleToggleReplies = (commentId) => {
+    const updatedComments = comments.map((comment) => {
+      if (comment.id === commentId) {
+        const updatedReplies = comment.replies.map((reply) => {
+          if (!replyRef[reply.id]) {
+            setReplyRef({
+              ...replyRef,
+              [reply.id]: createRef(),
+            });
+          }
+          return {
+            ...reply,
+            ref: replyRef[reply.id],
+          };
+        });
+        return {
+          ...comment,
+          repliesVisible: !comment.repliesVisible,
+          replies: updatedReplies,
+        };
+      } else {
+        const updatedReplies = comment.replies.map((reply) => {
+          return {
+            ...reply,
+            ref: null,
+          };
+        });
+        return {
+          ...comment,
+          repliesVisible: false,
+          replies: updatedReplies,
+        };
+      }
+    });
+    setComments(updatedComments);
+  };
+
+  const rootComments =
+    post.comments &&
+    post.comments
+      .filter((comment) => comment && comment.parentComment === null)
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
 
   useImperativeHandle(ref, () => ({
     scrollIntoView: () => {
@@ -152,7 +204,11 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
             </div>
             <Button>Subcribe</Button>
           </div>
-          <CommentList />
+          <EditorForm />
+          <CommentList comments={rootComments} />
+          {/* {rootComments.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
+          ))} */}
         </div>
       </div>
     </>

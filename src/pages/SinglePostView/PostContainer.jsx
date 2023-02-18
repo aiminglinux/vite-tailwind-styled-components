@@ -1,9 +1,11 @@
 import { useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { useGetPostQuery } from "../../core/features/posts/postsApiSlice";
 import { useGetUserQuery } from "../../core/features/users/usersApiSlice";
 import { useDeletePostMutation } from "../../core/features/posts/postsApiSlice";
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
 
 import useRequireAuthen from "../../hooks/useRequireAuthen";
 
@@ -17,6 +19,7 @@ import More from "./components/More";
 
 const PostContainer = () => {
   const commentRef = useRef(null);
+  const { id } = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const { postId } = useParams();
   const { isAuthed, handleAuth } = useRequireAuthen();
@@ -60,7 +63,7 @@ const PostContainer = () => {
       {!isLoading && post && (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-[50px_1fr] lg:grid-cols-[64px_1fr_350px] mx-auto">
           <aside className="hidden md:block">
-            <Reactions commentRef={commentRef} />
+            <Reactions commentRef={commentRef} post={post} id={id} />
           </aside>
           <main>
             <PostDetail post={post} ref={commentRef} onDelete={onDelete} />

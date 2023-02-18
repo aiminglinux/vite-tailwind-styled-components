@@ -4,10 +4,10 @@ import SimpleMDE from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
 
-const ContentEditor = ({ name, control }) => {
+const ContentEditor = ({ name, control, placeholder }) => {
   const placeholderOpt = useMemo(() => {
     return {
-      placeholder: "Write your post content here...",
+      placeholder,
       hideIcons: ["guide", "side-by-side", "fullscreen"],
       spellChecker: false,
     };
