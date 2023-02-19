@@ -1,9 +1,7 @@
-import Xarrow from "react-xarrows";
 import Comment from "./Comment";
 
 const CommentList = ({ comments, parentCommentRef }) => {
-  console.log("Parent: ", parentCommentRef?.current);
-  return comments.map((comment, i) => (
+  return comments.map((comment) => (
     <div key={comment.id}>
       <Comment comment={comment} />
     </div>
