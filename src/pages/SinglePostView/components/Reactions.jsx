@@ -6,7 +6,7 @@ import "tippy.js/dist/tippy.css";
 
 import { isLikedByMe } from "../../../utils/string";
 
-const Reactions = ({ commentRef, post, id }) => {
+const Reactions = ({ commentRef, post, id, onPostActions, postLoading }) => {
   const scrollToComment = () => {
     if (commentRef.current) {
       commentRef.current.scrollIntoView({ behavior: "smooth" });
@@ -14,7 +14,11 @@ const Reactions = ({ commentRef, post, id }) => {
   };
 
   const isLike = isLikedByMe(post.likes, id);
-  // console.log(isLike);
+  console.log(post.likes);
+
+  const handlePostActions = (type) => {
+    onPostActions(post.id, type, id, isLike);
+  };
 
   return (
     <Fragment>
@@ -24,9 +28,15 @@ const Reactions = ({ commentRef, post, id }) => {
             placement="bottom"
             content={`${isLike ? "Unlike this post" : "Like this post"}`}
           >
-            <button className="inline-flex flex-col flex-1 items-center">
+            <button
+              className="inline-flex flex-col flex-1 items-center"
+              onClick={() => handlePostActions("like")}
+              disabled={postLoading}
+            >
               <span
-                className={`hover:animate-ping p-2 rounded-full hover:bg-pink-100 hover:text-pink-500 transition-none ${
+                className={`${
+                  postLoading ? "animate-spin" : ""
+                } p-2 rounded-full hover:bg-pink-100 hover:text-pink-500 transition-none border-2 border-transparent ${
                   isLike ? `border-2 border-pink-500` : ""
                 }`}
               >
@@ -54,7 +64,10 @@ const Reactions = ({ commentRef, post, id }) => {
             </button>
           </Tippy>
           <Tippy placement="bottom" content="&#128278; Bookmark this post">
-            <button className="inline-flex flex-col flex-1 items-center">
+            <button
+              className="inline-flex flex-col flex-1 items-center"
+              onClick={() => handlePostActions("bookmark")}
+            >
               <span className="p-2 rounded-full hover:bg-blue-100 hover:text-blue-500 transition-none">
                 <RiBookmarkLine size={28} />
               </span>

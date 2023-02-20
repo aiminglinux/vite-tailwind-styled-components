@@ -4,7 +4,10 @@ import { useSelector } from "react-redux";
 
 import { useGetPostQuery } from "../../core/features/posts/postsApiSlice";
 import { useGetUserQuery } from "../../core/features/users/usersApiSlice";
-import { useDeletePostMutation } from "../../core/features/posts/postsApiSlice";
+import {
+  useDeletePostMutation,
+  usePostActionsMutation,
+} from "../../core/features/posts/postsApiSlice";
 import { selectCurrentUser } from "../../core/features/auth/authSlice";
 
 import useRequireAuthen from "../../hooks/useRequireAuthen";
@@ -24,6 +27,9 @@ const PostContainer = () => {
   const { postId } = useParams();
   const { isAuthed, handleAuth } = useRequireAuthen();
 
+  const [postReactions, { isLoading: postReactLoading, error }] =
+    usePostActionsMutation();
+
   const [deletePost, { isLoading: deletePostLoading }] =
     useDeletePostMutation();
 
@@ -31,13 +37,26 @@ const PostContainer = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  console.log("Post ID: ", postId);
-  console.log("Post: ", post);
+  // console.log("Post ID: ", postId);
+  // console.log("Post: ", post);
 
   // const { data: postsByUser, isLoading: postsByUserLoading } = useGetUserQuery(
   //   username,
   //   { refetchOnMountOrArgChange: true }
   // );
+
+  const handlePostActions = async (postId, type, userId, isLiked) => {
+    try {
+      postReactions({
+        postId,
+        userId,
+        isLiked,
+        type: `${type}`,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const onDelete = async (slug) => {
     // if (isAuthed) {
@@ -63,7 +82,13 @@ const PostContainer = () => {
       {!isLoading && post && (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-[50px_1fr] lg:grid-cols-[64px_1fr_350px] mx-auto">
           <aside className="hidden md:block">
-            <Reactions commentRef={commentRef} post={post} id={id} />
+            <Reactions
+              commentRef={commentRef}
+              post={post}
+              id={id}
+              onPostActions={handlePostActions}
+              postLoading={postReactLoading}
+            />
           </aside>
           <main>
             <PostDetail post={post} ref={commentRef} onDelete={onDelete} />

@@ -31,7 +31,7 @@ const postsApiSlice = apiSlice.injectEndpoints({
               { type: "Comment", id: "LIST" },
               { type: "Post", id: result.id },
             ]
-          : [{ type: "Post", id: "List" }],
+          : [{ type: "Post", id: "LIST" }],
     }),
     updatePost: builder.mutation({
       query: ({ meta, patch }) => ({
@@ -60,18 +60,35 @@ const postsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, err, { id }) => [{ type: "Post", id: id }],
     }),
-    // postActions: builder.mutation({
-    //   query: ({postId, isLiked}) => ({
-    //     url: `/posts/${postId}/:${action}`,
-    //     method: 'PATCH',
-    //     body: {isLiked}
-    //   }),
-    //   invalidatesTags: (result, err, args) => [{type: 'Post', id: postId}],
-    //   async onQueryStarted({postId}, {dispatch, queryFulfilled}) {
-    //     const {data: updatedPost} = await queryFulfilled
-
-    //   }
-    // })
+    postActions: builder.mutation({
+      query: ({ postId, type }) => ({
+        url: `/posts/${postId}/${type}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: (result, err, args) => [{ type: "Post", id: postId }],
+      async onQueryStarted(
+        { postId, isLiked, userId },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          postsApiSlice.util.updateQueryData("getPost", postId, (draftPost) => {
+            console.log("Patch: ", isLiked);
+            // draftPost.likes = [...draftPost.likes.splice(userId, 1)];
+            isLiked
+              ? (draftPost.likes = [...draftPost.likes.splice(userId, 1)])
+              : (draftPost.likes = [...draftPost.likes, userId]);
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+          dispatch(
+            postsApiSlice.util.invalidateTags([{ type: "Post", id: postId }])
+          );
+        }
+      },
+    }),
   }),
   overrideExisting: true,
 });
@@ -82,6 +99,7 @@ export const {
   useGetPostsQuery,
   useUpdatePostMutation,
   useDeletePostMutation,
+  usePostActionsMutation,
 } = postsApiSlice;
 
 export default postsApiSlice;

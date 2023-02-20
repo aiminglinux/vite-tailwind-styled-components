@@ -1,9 +1,12 @@
 import Comment from "./Comment";
+import { Xwrapper } from "react-xarrows";
 
-const CommentList = ({ comments, parentCommentRef }) => {
+const CommentList = ({ comments, depth = 0 }) => {
   return comments.map((comment) => (
     <div key={comment.id}>
-      <Comment comment={comment} />
+      <Xwrapper>
+        <Comment comment={comment} depth={depth} />
+      </Xwrapper>
     </div>
   ));
 };

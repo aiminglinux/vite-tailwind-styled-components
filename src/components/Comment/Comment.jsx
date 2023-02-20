@@ -1,20 +1,19 @@
+import { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { useRef, useEffect, useState, useLayoutEffect } from "react";
-import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
+import Xarrow, { Xwrapper, useXarrow } from "react-xarrows";
 
 import useToggle from "../../hooks/useToggle";
 
 import { AiOutlineHeart } from "react-icons/ai";
-import { MdOutlineModeComment } from "react-icons/md";
 import { BsReply } from "react-icons/bs";
+import { MdOutlineModeComment } from "react-icons/md";
 
 import { formatDate } from "../../utils/string";
 import CommentList from "./CommentList";
-import { getReplies } from "../../utils/string";
 
-const Comment = ({ comment, onToggleReplies }) => {
+const Comment = ({ comment, depth }) => {
   const [commentMenu, toggleCommentMenu] = useToggle(false);
-  const [showReplies, setShowReplies] = useState(true);
+  const [showReplies, setShowReplies] = useState(false);
 
   const commentMenuRef = useRef(null);
   const updateXarrow = useXarrow();
@@ -35,7 +34,12 @@ const Comment = ({ comment, onToggleReplies }) => {
 
   return (
     <Xwrapper>
-      <div className="flex space-x-2 border rounded-md p-2 bg-gray-200">
+      <div
+        className={`flex space-x-2 border rounded-md p-2 bg-gray-200 ${
+          depth > 0 ? "pr-0" : ""
+        }`}
+        onLoad={() => updateXarrow()}
+      >
         <aside>
           <a href="#" id={`${comment.id}`}>
             <img
@@ -57,13 +61,14 @@ const Comment = ({ comment, onToggleReplies }) => {
               <div
                 onClick={toggleCommentMenu}
                 className="hover:bg-indigo-100 text-center p-2 hover:rounded-md"
+                ref={commentMenuRef}
               >
                 <BsThreeDots size={20} />
               </div>
               {commentMenu && (
                 <ul
                   className="absolute right-2 top-12 bg-white border py-2 px-2 rounded-md w-1/3 z-20"
-                  ref={commentMenuRef}
+                  // ref={commentMenuRef}
                   onClick={toggleCommentMenu}
                 >
                   <li className="hover:bg-indigo-100 hover:text-indigo-500 p-2 rounded-md">
@@ -108,7 +113,9 @@ const Comment = ({ comment, onToggleReplies }) => {
             </div>
           </footer>
           {/* {showReplies && <CommentList comments={replies} />} */}
-          {showReplies && <CommentList comments={comment.replies} />}
+          {showReplies && (
+            <CommentList comments={comment.replies} depth={depth + 1} />
+          )}
 
           {showReplies &&
             comment.replies.map((reply) => (
@@ -117,11 +124,16 @@ const Comment = ({ comment, onToggleReplies }) => {
                 start={`${comment.id}`}
                 end={`${reply.id}`}
                 endAnchor="left"
-                color="white"
-                strokeWidth={1}
-                headSize={0}
+                color="rgba(59,130,246, 1)"
+                strokeWidth={0.5}
+                headSize={8}
+                showHead={true}
+                showTail={true}
+                headShape={"circle"}
+                tailSize={8}
                 path={"grid"}
-                gridBreak="90%"
+                gridBreak="70%"
+                tailShape={"circle"}
               />
             ))}
         </div>
