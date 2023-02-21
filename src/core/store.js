@@ -19,7 +19,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage: storage,
-  blacklist: "notification",
+  blacklist: ["notification", "auth"],
 };
 
 const rootReducer = combineReducers({

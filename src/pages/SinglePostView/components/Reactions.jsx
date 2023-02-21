@@ -1,23 +1,51 @@
-import { RiHeart2Line, RiHeart2Fill, RiBookmarkLine } from "react-icons/ri";
+import {
+  RiHeart2Line,
+  RiHeart2Fill,
+  RiBookmarkLine,
+  RiBookmarkFill,
+} from "react-icons/ri";
 import { MdOutlineModeComment } from "react-icons/md";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
-import { isLikedByMe } from "../../../utils/string";
+import { isInArray } from "../../../utils/string";
 
-const Reactions = ({ commentRef, post, id, onPostActions, postLoading }) => {
+const Reactions = ({ commentRef, post, id, onPostActions, isLoading }) => {
   const scrollToComment = () => {
     if (commentRef.current) {
       commentRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+  const [buttonAnimate, setButtonAnimate] = useState({
+    likeAnimate: false,
+    bookmarkAnimate: false,
+  });
 
-  const isLike = isLikedByMe(post.likes, id);
-  console.log(post.likes);
+  useEffect(() => {
+    if (!isLoading) {
+      setButtonAnimate(!buttonAnimate);
+    }
+  }, [isLoading]);
+
+  const isLiked = isInArray(post.likes, id);
+  const isBookmarked = isInArray(post.bookmarks, id);
 
   const handlePostActions = (type) => {
-    onPostActions(post.id, type, id, isLike);
+    let isLikedOrBookmarked;
+    const actions = {
+      like: () => {
+        setButtonAnimate({ likeAnimate: true });
+        onPostActions(post.id, type, id, (isLikedOrBookmarked = isLiked));
+      },
+      bookmark: () => {
+        setButtonAnimate({ bookmarkAnimate: true });
+
+        onPostActions(post.id, type, id, (isLikedOrBookmarked = isBookmarked));
+      },
+    };
+
+    actions[type]();
   };
 
   return (
@@ -26,33 +54,49 @@ const Reactions = ({ commentRef, post, id, onPostActions, postLoading }) => {
         <div className="grid grid-flow-raw gap-4 justify-stretch top-10">
           <Tippy
             placement="bottom"
-            content={`${isLike ? "Unlike this post" : "Like this post"}`}
+            content={`${isLiked ? "Unlike this post" : "Like this post"}`}
           >
-            <button
-              className="inline-flex flex-col flex-1 items-center"
-              onClick={() => handlePostActions("like")}
-              disabled={postLoading}
-            >
-              <span
-                className={`${
-                  postLoading ? "animate-spin" : ""
-                } p-2 rounded-full hover:bg-pink-100 hover:text-pink-500 transition-none border-2 border-transparent ${
-                  isLike ? `border-2 border-pink-500` : ""
-                }`}
+            <div className="inline-flex flex-col items-center space-y-4 ">
+              <button
+                className="inline-flex items-center relative justify-center group"
+                onClick={() => handlePostActions("like")}
+                disabled={isLoading}
               >
-                {isLike ? (
-                  <RiHeart2Fill
-                    size={28}
-                    className="text-pink-500 rounded-full"
-                  />
-                ) : (
-                  <RiHeart2Line size={28} />
-                )}
-              </span>
+                <div className="z-10">
+                  {isLiked ? (
+                    <RiHeart2Fill
+                      size={28}
+                      className={`
+                     ${
+                       isLoading && buttonAnimate.likeAnimate
+                         ? "animate-bounce"
+                         : ""
+                     } text-pink-500 rounded-full `}
+                    />
+                  ) : (
+                    <RiHeart2Line
+                      size={28}
+                      className={`
+                     ${
+                       isLoading && buttonAnimate.likeAnimate
+                         ? "animate-bounce"
+                         : ""
+                     } group-hover:text-pink-500`}
+                    />
+                  )}
+                </div>
+                <span
+                  className={`${isLiked ? "border-pink-400" : ""} ${
+                    isLoading && buttonAnimate.likeAnimate
+                      ? "border-t-2 border-t-pink-500 animate-spin"
+                      : ""
+                  } p-6 rounded-full hover:text-blue-500 transition-none border-2 border-transparent absolute items-center group-hover:bg-pink-100`}
+                />
+              </button>
               <span>{post.likes.length}</span>
-            </button>
+            </div>
           </Tippy>
-          <Tippy placement="bottom" content="&#128172; Jump to comment section">
+          <Tippy placement="bottom" content="Jump to comments">
             <button
               className="inline-flex flex-col flex-1 items-center"
               onClick={scrollToComment}
@@ -63,16 +107,56 @@ const Reactions = ({ commentRef, post, id, onPostActions, postLoading }) => {
               <span>{post.comments.length}</span>
             </button>
           </Tippy>
-          <Tippy placement="bottom" content="&#128278; Bookmark this post">
-            <button
-              className="inline-flex flex-col flex-1 items-center"
-              onClick={() => handlePostActions("bookmark")}
-            >
-              <span className="p-2 rounded-full hover:bg-blue-100 hover:text-blue-500 transition-none">
-                <RiBookmarkLine size={28} />
-              </span>
+          <Tippy
+            placement="bottom"
+            content={`${
+              isBookmarked ? "Remove bookmark" : "Bookmark this post"
+            }`}
+          >
+            <div className="inline-flex flex-col items-center space-y-4">
+              <button
+                className="inline-flex items-center relative justify-center group"
+                onClick={() => handlePostActions("bookmark")}
+                disabled={isLoading}
+              >
+                <div className="z-10">
+                  {isBookmarked ? (
+                    <RiBookmarkFill
+                      size={28}
+                      className={`
+                    ${
+                      isLoading && buttonAnimate.bookmarkAnimate
+                        ? "animate-bounce"
+                        : ""
+                    } text-yellow-500 rounded-full `}
+                    />
+                  ) : (
+                    <RiBookmarkLine
+                      size={28}
+                      className={`
+                    ${
+                      isLoading && buttonAnimate.bookmarkAnimate
+                        ? "animate-bounce"
+                        : ""
+                    } group-hover:text-yellow-500`}
+                    />
+                  )}
+                </div>
+                <span
+                  className={`${
+                    isBookmarked && !buttonAnimate.bookmarkAnimate
+                      ? "border-yellow-500"
+                      : ""
+                  } ${
+                    isLoading && buttonAnimate.bookmarkAnimate
+                      ? "border-t-2 border-t-yellow-500 animate-spin"
+                      : ""
+                  } p-6 rounded-full transition-none border-2 border-transparent absolute items-center group-hover:bg-yellow-100`}
+                />
+                {/* <span className="p-6 rounded-full hover:text-blue-500 transition-none border-2 border-yellow-500 absolute items-center"></span> */}
+              </button>
               <span>{post.bookmarks.length}</span>
-            </button>
+            </div>
           </Tippy>
         </div>
       </div>

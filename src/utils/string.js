@@ -48,7 +48,7 @@ export const getReplies = (comments, commentId) => {
   );
 };
 
-export const isLikedByMe = (likes, id) => {
+export const isInArray = (likes, id) => {
   if (likes.includes(id)) return true;
   return false;
 };

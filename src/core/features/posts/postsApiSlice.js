@@ -67,16 +67,17 @@ const postsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, err, args) => [{ type: "Post", id: postId }],
       async onQueryStarted(
-        { postId, isLiked, userId },
+        { postId, isLikedOrBookmarked, userId, actionKey },
         { dispatch, queryFulfilled }
       ) {
         const patchResult = dispatch(
           postsApiSlice.util.updateQueryData("getPost", postId, (draftPost) => {
-            console.log("Patch: ", isLiked);
-            // draftPost.likes = [...draftPost.likes.splice(userId, 1)];
-            isLiked
-              ? (draftPost.likes = [...draftPost.likes.splice(userId, 1)])
-              : (draftPost.likes = [...draftPost.likes, userId]);
+            // return console.log(actionKey);
+            isLikedOrBookmarked
+              ? (draftPost[actionKey] = [
+                  ...draftPost[actionKey].filter((id) => id !== userId),
+                ])
+              : (draftPost[actionKey] = [...draftPost[actionKey], userId]);
           })
         );
         try {

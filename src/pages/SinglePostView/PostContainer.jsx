@@ -8,7 +8,10 @@ import {
   useDeletePostMutation,
   usePostActionsMutation,
 } from "../../core/features/posts/postsApiSlice";
-import { selectCurrentUser } from "../../core/features/auth/authSlice";
+import {
+  selectCurrentUser,
+  selectAuthModal,
+} from "../../core/features/auth/authSlice";
 
 import useRequireAuthen from "../../hooks/useRequireAuthen";
 
@@ -19,10 +22,13 @@ import AuthorDetail from "./components/AuthorDetail";
 import PostDetail from "./components/PostDetail";
 import Reactions from "./components/Reactions";
 import More from "./components/More";
+import Modal from "../../components/Portal/Component/Modal";
+import Login from "../Login/Login";
 
 const PostContainer = () => {
   const commentRef = useRef(null);
   const { id } = useSelector(selectCurrentUser);
+  const authModal = useSelector(selectAuthModal);
   const navigate = useNavigate();
   const { postId } = useParams();
   const { isAuthed, handleAuth } = useRequireAuthen();
@@ -39,22 +45,35 @@ const PostContainer = () => {
 
   // console.log("Post ID: ", postId);
   // console.log("Post: ", post);
+  console.log("Auth modal: ", authModal);
+  console.log("isAuth? : ", isAuthed);
 
   // const { data: postsByUser, isLoading: postsByUserLoading } = useGetUserQuery(
   //   username,
   //   { refetchOnMountOrArgChange: true }
   // );
 
-  const handlePostActions = async (postId, type, userId, isLiked) => {
-    try {
-      postReactions({
-        postId,
-        userId,
-        isLiked,
-        type: `${type}`,
-      });
-    } catch (err) {
-      console.error(err);
+  const handlePostActions = async (
+    postId,
+    type,
+    userId,
+    isLikedOrBookmarked
+  ) => {
+    const actionKey = type + "s";
+    if (isAuthed) {
+      try {
+        postReactions({
+          postId,
+          userId,
+          isLikedOrBookmarked,
+          type: `${type}`,
+          actionKey,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      handleAuth();
     }
   };
 
@@ -77,6 +96,12 @@ const PostContainer = () => {
 
   return (
     <Fragment>
+      <Modal
+        title={`You need to login first to perform actions`}
+        // promptText={`We are waiting for your next awesome post!`}
+        isOpen={authModal}
+        children={<Login />}
+      />
       {isLoading && <LoadingSpinner />}
       {!isLoading && !post && <NotFound />}
       {!isLoading && post && (
@@ -87,7 +112,7 @@ const PostContainer = () => {
               post={post}
               id={id}
               onPostActions={handlePostActions}
-              postLoading={postReactLoading}
+              isLoading={postReactLoading}
             />
           </aside>
           <main>

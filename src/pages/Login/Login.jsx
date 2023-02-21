@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { useLoginMutation } from "../../core/features/auth/authApiSlice";
-import { setCredentials, setToken } from "../../core/features/auth/authSlice";
+import {
+  setCredentials,
+  setToken,
+  setAuthModal,
+} from "../../core/features/auth/authSlice";
 import useRequireAuthen from "../../hooks/useRequireAuthen";
 
 import LoginForm from "./components/LoginForm";
@@ -65,6 +69,7 @@ function Login() {
         })
       );
       dispatch(setToken(accessToken));
+      // dispatch(setAuthModal(false));
     } catch (error) {
       console.log(error);
     }
