@@ -85,7 +85,10 @@ const Post = ({ post, isFirstPost }) => {
 
         <Footer>
           <Reactions>
-            <div className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-gray-200 cursor-pointer">
+            <div
+              className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-gray-200 cursor-pointer"
+              onClick={() => navigate(`/posts/${post.id}`)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -107,7 +110,7 @@ const Post = ({ post, isFirstPost }) => {
             </div>
             <div
               className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-gray-200 cursor-pointer"
-              onClick={() => navigate(`posts/${post.id}`)}
+              onClick={() => navigate(`/posts/${post.id}`)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

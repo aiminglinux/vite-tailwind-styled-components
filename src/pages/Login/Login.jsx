@@ -105,6 +105,6 @@ function Login() {
 }
 
 const Wrapper = tw.section`w-full md:w-[80%] lg:w-[60%] bg-white rounded-md border border-solid mx-auto`;
-const Inner = tw.div`p-2 md:p-12 space-y-4`;
+const Inner = tw.div`p-2 md:p-12 space-y-4 relative`;
 
 export default Login;

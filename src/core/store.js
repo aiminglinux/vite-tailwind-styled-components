@@ -13,13 +13,13 @@ import storage from "redux-persist/lib/storage";
 
 import apiSlice from "./features/api/apiSlice";
 import authReducer from "./features/auth/authSlice";
-import notificationReducer from "./features/Notifications/NotificationSlice";
+import notificationReducer from "./features/notifications/NotificationSlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage: storage,
-  blacklist: ["notification", "auth"],
+  blacklist: ["notification"],
 };
 
 const rootReducer = combineReducers({

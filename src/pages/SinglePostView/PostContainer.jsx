@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { createContext, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -12,6 +12,8 @@ import {
   selectCurrentUser,
   selectAuthModal,
 } from "../../core/features/auth/authSlice";
+import { useCommmentActionMutation } from "../../core/features/comment/commentsApiSlice";
+import postsApiSlice from "../../core/features/posts/postsApiSlice";
 
 import useRequireAuthen from "../../hooks/useRequireAuthen";
 
@@ -23,10 +25,13 @@ import PostDetail from "./components/PostDetail";
 import Reactions from "./components/Reactions";
 import More from "./components/More";
 import Modal from "../../components/Portal/Component/Modal";
-import Login from "../Login/Login";
+import LoginForm from "../Login/components/LoginForm";
+
+export const PostContext = createContext();
 
 const PostContainer = () => {
   const commentRef = useRef(null);
+  const [likedCommentId, setLikedCommentId] = useState(null);
   const { id } = useSelector(selectCurrentUser);
   const authModal = useSelector(selectAuthModal);
   const navigate = useNavigate();
@@ -36,17 +41,19 @@ const PostContainer = () => {
   const [postReactions, { isLoading: postReactLoading, error }] =
     usePostActionsMutation();
 
+  const [commentReactions, { isLoading: commentReactLoading }] =
+    useCommmentActionMutation();
+
   const [deletePost, { isLoading: deletePostLoading }] =
     useDeletePostMutation();
 
-  const { data: post, isLoading: singlePostLoading } = useGetPostQuery(postId, {
+  const {
+    data: post,
+    isLoading: singlePostLoading,
+    refetch,
+  } = useGetPostQuery(postId, {
     refetchOnMountOrArgChange: true,
   });
-
-  // console.log("Post ID: ", postId);
-  // console.log("Post: ", post);
-  console.log("Auth modal: ", authModal);
-  console.log("isAuth? : ", isAuthed);
 
   // const { data: postsByUser, isLoading: postsByUserLoading } = useGetUserQuery(
   //   username,
@@ -72,9 +79,13 @@ const PostContainer = () => {
       } catch (err) {
         console.error(err);
       }
-    } else {
-      handleAuth();
     }
+  };
+
+  const handleCommentReaction = async (id, isLiked) => {
+    setLikedCommentId(id);
+    await commentReactions({ id });
+    refetch();
   };
 
   const onDelete = async (slug) => {
@@ -95,17 +106,19 @@ const PostContainer = () => {
   // !isLoading && console.log(postsByUser);
 
   return (
-    <Fragment>
-      <Modal
+    <PostContext.Provider
+      value={{ handleCommentReaction, commentReactLoading }}
+    >
+      {/* <Modal
         title={`You need to login first to perform actions`}
         // promptText={`We are waiting for your next awesome post!`}
         isOpen={authModal}
-        children={<Login />}
-      />
+        children={<LoginForm />}
+      /> */}
       {isLoading && <LoadingSpinner />}
       {!isLoading && !post && <NotFound />}
       {!isLoading && post && (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-[50px_1fr] lg:grid-cols-[64px_1fr_350px] mx-auto">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-[50px_1fr] lg:grid-cols-[64px_1fr_350px] mx-auto relative">
           <aside className="hidden md:block">
             <Reactions
               commentRef={commentRef}
@@ -116,7 +129,12 @@ const PostContainer = () => {
             />
           </aside>
           <main>
-            <PostDetail post={post} ref={commentRef} onDelete={onDelete} />
+            <PostDetail
+              post={post}
+              ref={commentRef}
+              onDelete={onDelete}
+              id={id}
+            />
           </main>
           <aside className="hidden lg:block space-y-4">
             <AuthorDetail author={post.author} />
@@ -124,7 +142,7 @@ const PostContainer = () => {
           </aside>
         </div>
       )}
-    </Fragment>
+    </PostContext.Provider>
   );
 };
 

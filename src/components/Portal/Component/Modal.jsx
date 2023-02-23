@@ -47,11 +47,11 @@ function Modal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed z-50 h-fit bg-slate-100 w-2/3 lg:w-1/2 top-1/2 -translate-y-1/2 mx-auto text-center inset-0 rounded-md shadow-md"
+          className="fixed z-50 h-fit bg-white w-2/3 lg:w-1/3 top-1/2 -translate-y-1/2 mx-auto inset-0 rounded-md shadow-md"
           ref={nodeRef}
         >
-          <div className="">
-            <h1 className="bg-blue-600 py-2 text-xl font-semibold rounded-t-md">
+          <div className="text-center">
+            <h1 className="bg-blue-600 py-2 text-xl text-yellow-500 font-semibold rounded-t-md">
               {title}
             </h1>
             {promptText && (
@@ -80,7 +80,7 @@ function Modal({
               </div>
             )}
           </div>
-          <div className="modal-content select-none">{children}</div>
+          <div className="modal-content select-none px-4 py-6">{children}</div>
         </motion.div>
       </div>
     </Portal>

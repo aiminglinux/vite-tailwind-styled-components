@@ -52,3 +52,24 @@ export const isInArray = (likes, id) => {
   if (likes.includes(id)) return true;
   return false;
 };
+
+export const isCommentLikedByUser = (comment, userId) => {
+  if (comment.likes.includes(userId)) {
+    return true;
+  }
+
+  if (comment.replies.length > 0) {
+    comment.replies.map((reply) => {
+      if (reply.likes.includes(userId)) {
+        return true;
+      }
+      if (reply.replies.length > 0) {
+        if (isCommentLikedByUser(reply, userId)) {
+          return true;
+        }
+      }
+    });
+  }
+
+  return false;
+};

@@ -86,7 +86,7 @@ const Reactions = ({ commentRef, post, id, onPostActions, isLoading }) => {
                   )}
                 </div>
                 <span
-                  className={`${isLiked ? "border-pink-400" : ""} ${
+                  className={`${isLiked ? "border-pink-500 bg-pink-100" : ""} ${
                     isLoading && buttonAnimate.likeAnimate
                       ? "border-t-2 border-t-pink-500 animate-spin"
                       : ""
@@ -145,7 +145,7 @@ const Reactions = ({ commentRef, post, id, onPostActions, isLoading }) => {
                 <span
                   className={`${
                     isBookmarked && !buttonAnimate.bookmarkAnimate
-                      ? "border-yellow-500"
+                      ? "border-yellow-500 bg-yellow-50"
                       : ""
                   } ${
                     isLoading && buttonAnimate.bookmarkAnimate

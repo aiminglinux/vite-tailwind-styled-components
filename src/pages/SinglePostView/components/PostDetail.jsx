@@ -6,7 +6,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { BsChevronExpand, BsThreeDotsVertical } from "react-icons/bs";
+import {
+  BsArrowsExpand,
+  BsThreeDotsVertical,
+  BsArrowsCollapse,
+} from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -29,47 +33,8 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
   const menuRef = useRef(null);
 
   const [postMenu, togglePostMenu] = useToggle(false);
+  const [showComments, setShowComments] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-
-  const [comments, setComments] = useState(post.comments);
-  const [replyRef, setReplyRef] = useState({});
-
-  const handleToggleReplies = (commentId) => {
-    const updatedComments = comments.map((comment) => {
-      if (comment.id === commentId) {
-        const updatedReplies = comment.replies.map((reply) => {
-          if (!replyRef[reply.id]) {
-            setReplyRef({
-              ...replyRef,
-              [reply.id]: createRef(),
-            });
-          }
-          return {
-            ...reply,
-            ref: replyRef[reply.id],
-          };
-        });
-        return {
-          ...comment,
-          repliesVisible: !comment.repliesVisible,
-          replies: updatedReplies,
-        };
-      } else {
-        const updatedReplies = comment.replies.map((reply) => {
-          return {
-            ...reply,
-            ref: null,
-          };
-        });
-        return {
-          ...comment,
-          repliesVisible: false,
-          replies: updatedReplies,
-        };
-      }
-    });
-    setComments(updatedComments);
-  };
 
   const rootComments =
     post.comments &&
@@ -132,7 +97,7 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
                 <div>
                   <h4
                     className="text-md font-semibold hover:text-blue-600 cursor-pointer"
-                    onClick={() => navigate(`/${post?.author?.username}`)}
+                    onClick={() => navigate(`/users/${post?.author?.id}`)}
                   >
                     {post.author.name}
                   </h4>
@@ -198,17 +163,28 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
               <h2 className="text-xl font-semibold">
                 Comments ({post.comments.length})
               </h2>
-              <button className="p-4 hover:bg-indigo-100 hover:rounded-md">
-                <BsChevronExpand size={16} />
+              <button
+                className="p-4 hover:bg-indigo-100 hover:rounded-md"
+                onClick={() => setShowComments(!showComments)}
+              >
+                {showComments ? (
+                  <BsArrowsExpand size={16} />
+                ) : (
+                  <BsArrowsCollapse size={16} />
+                )}
               </button>
             </div>
             <Button>Subcribe</Button>
           </div>
-          <EditorForm />
-          <CommentList comments={rootComments} />
-          {/* {rootComments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
-          ))} */}
+          {showComments && (
+            <div className="space-y-4">
+              <EditorForm />
+              <CommentList comments={rootComments} id={id} />
+              {/* {rootComments.map((comment) => (
+                <Comment comment={comment} />
+              ))} */}
+            </div>
+          )}
         </div>
       </div>
     </>

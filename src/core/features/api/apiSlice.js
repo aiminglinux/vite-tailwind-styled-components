@@ -16,6 +16,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 403) {
+    console.log("running...");
+
     const refreshResult = await baseQuery("/refresh", api, extraOptions);
 
     if (refreshResult?.data) {
@@ -37,7 +39,7 @@ const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
-  tagTypes: ["User", "Post", "Tag"],
+  tagTypes: ["User", "Post", "Tag", "Comment"],
   keepUnusedDataFor: 5,
 });
 

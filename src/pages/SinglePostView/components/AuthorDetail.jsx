@@ -7,8 +7,8 @@ const AuthorDetail = ({ author }) => {
   const navigate = useNavigate();
   // console.log("Author detail");
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-4 p-4 border rounded-md bg-slate-50	 border-t-[2rem] border-t-gray-300">
+    <div className="grid gap-4 sticky top-[4.5rem]">
+      <div className="grid gap-4 p-4 border rounded-md bg-slate-50 border-t-[2rem] border-t-gray-300">
         <div className="-mt-8">
           <div className="flex items-end space-x-2">
             <span className="border border-gray-600 rounded-full">

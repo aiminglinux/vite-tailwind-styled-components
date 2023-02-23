@@ -15,6 +15,6 @@ function DefaultLayout() {
     </Fragment>
   );
 }
-const Wrapper = tw.div`w-full max-w-screen-xl mx-auto mt-14 md:p-4`;
+const Wrapper = tw.div`w-full max-w-screen-xl mx-auto mt-14 md:p-4 overflow-visible`;
 
 export default DefaultLayout;

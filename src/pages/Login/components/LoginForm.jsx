@@ -44,7 +44,7 @@ const LoginForm = ({ onSubmit }) => {
             <input
               {...register("email")}
               name="email"
-              className="w-full outline-none"
+              className="w-full outline-none bg-transparent"
               placeholder="Enter your email..."
             />
           </div>
@@ -64,7 +64,7 @@ const LoginForm = ({ onSubmit }) => {
               {...register("password")}
               type="password"
               name="password"
-              className="w-full outline-none"
+              className="w-full outline-none bg-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -76,10 +76,15 @@ const LoginForm = ({ onSubmit }) => {
           Log in
         </Button>
 
-        <div className="relative after:absolute after:content-[''] after:w-full after:border after:left-0 after:top-[50%]">
-          <span className="z-50 inline-block bg-white relative text-center mx-auto ml-[50%] translate-x-[-50%] px-2">
-            Don't have an account? <Register to="/login">Register</Register>
-          </span>
+        <div className="mt-10 relative">
+          <div className="relative after:absolute after:content-[''] after:w-full after:border after:left-0 after:top-[50%]">
+            <div className="z-10 inline-block absolute text-center l-[50%] px-2 inset-0 -top-3">
+              <span className="bg-white p-1 rounded-lg">
+                Don't have an account?
+              </span>
+              <Register to="/login">Register</Register>
+            </div>
+          </div>
         </div>
       </Wrapper>
     </Fragment>
@@ -90,6 +95,6 @@ const Wrapper = tw.form`space-y-4`;
 const Register = styled(Link).attrs({
   to: "/auth/register",
 })`
-  ${tw`text-blue-500`}
+  ${tw`text-blue-500 bg-white px-1`}
 `;
 export default LoginForm;

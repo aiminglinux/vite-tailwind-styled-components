@@ -1,25 +1,37 @@
-import { useEffect, useRef, useState } from "react";
-import { BsThreeDots } from "react-icons/bs";
-import Xarrow, { Xwrapper, useXarrow } from "react-xarrows";
+import { useContext, useEffect, useRef, useState } from "react";
+import { BsHeart, BsHeartFill, BsThreeDots, BsReply } from "react-icons/bs";
+import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
 
+import { selectCurrentUser } from "../../core/features/auth/authSlice";
 import useToggle from "../../hooks/useToggle";
 
-import { AiOutlineHeart } from "react-icons/ai";
-import { BsReply } from "react-icons/bs";
 import { MdOutlineModeComment } from "react-icons/md";
 
-import { formatDate } from "../../utils/string";
+import { formatDate, isCommentLikedByUser } from "../../utils/string";
+
+import { useSelector } from "react-redux";
+import { PostContext } from "../../pages/SinglePostView/PostContainer";
 import CommentList from "./CommentList";
 
 const Comment = ({ comment, depth }) => {
+  const { id } = useSelector(selectCurrentUser);
   const [commentMenu, toggleCommentMenu] = useToggle(false);
   const [showReplies, setShowReplies] = useState(false);
 
   const commentMenuRef = useRef(null);
   const updateXarrow = useXarrow();
+  const { handleCommentReaction, commentReactLoading, likedCommentId } =
+    useContext(PostContext);
+  const isLiked = isCommentLikedByUser(comment, id);
+
+  const isAnimated = commentReactLoading && comment.id === likedCommentId;
 
   const handleToggleReplies = () => {
     setShowReplies(!showReplies);
+  };
+
+  const handleLikeClick = () => {
+    handleCommentReaction(comment.id, isLiked);
   };
 
   useEffect(() => {
@@ -91,10 +103,22 @@ const Comment = ({ comment, depth }) => {
             </main>
           </div>
           <footer className="text-base flex items-center gap-4 mt-2">
-            <div className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer">
-              <AiOutlineHeart size={24} />
-              <span className="text-base lg:text-sm"> Likes</span>
-            </div>
+            <button
+              onClick={handleLikeClick}
+              disabled={isAnimated}
+              className={`${isLiked ? "bg-pink-50" : ""} ${
+                isAnimated ? "opacity-10" : ""
+              } flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer`}
+            >
+              {isLiked ? (
+                <BsHeartFill size={20} className="text-pink-500" />
+              ) : (
+                <BsHeart size={20} />
+              )}
+              <span className="text-base lg:text-sm">
+                {comment.likes.length} Likes
+              </span>
+            </button>
             {comment.replies.length > 0 && (
               <button
                 className="flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer"
@@ -112,11 +136,9 @@ const Comment = ({ comment, depth }) => {
               <span className="text-base lg:text-sm">Reply</span>
             </div>
           </footer>
-          {/* {showReplies && <CommentList comments={replies} />} */}
           {showReplies && (
-            <CommentList comments={comment.replies} depth={depth + 1} />
+            <CommentList comments={comment.replies} depth={depth + 1} id={id} />
           )}
-
           {showReplies &&
             comment.replies.map((reply) => (
               <Xarrow
