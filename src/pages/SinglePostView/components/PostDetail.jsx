@@ -24,6 +24,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 import Modal from "../../../components/Portal/Component/Modal";
 import Comment from "../../../components/Comment/Comment";
 import CommentList from "../../../components/Comment/CommentList";
+import CommentForm from "../../../components/Comment/CommentForm";
 import EditorForm from "../../../components/Editor/EditorForm";
 
 const PostDetail = forwardRef(({ post, onDelete }, ref) => {
@@ -178,7 +179,7 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
           </div>
           {showComments && (
             <div className="space-y-4">
-              <EditorForm />
+              <CommentForm />
               <CommentList comments={rootComments} id={id} />
               {/* {rootComments.map((comment) => (
                 <Comment comment={comment} />

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowCircleUp } from "react-icons/fa";
+import { BsArrowUpCircle } from "react-icons/bs";
 
 import { styled } from "twin.macro";
 
@@ -22,12 +23,16 @@ const ScrollButton = () => {
     });
   };
 
-  window.addEventListener("scroll", toggleVisible);
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisible);
+    return () => window.removeEventListener("scroll", toggleVisible);
+  });
 
   return (
     <Button>
-      <FaArrowCircleUp
+      <BsArrowUpCircle
         onClick={scrollToTop}
+        size={32}
         style={{ display: visible ? "inline" : "none" }}
       />
     </Button>
