@@ -1,33 +1,58 @@
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { ClassicEditor } from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import InlineEditor from '@aimingnpm/ckeditor5-build-inline';
+import { useState } from 'react';
 
-import { useState } from "react";
-
-const TextEditor = () => {
-  const [content, setContent] = useState("aaa");
-
-  const handleEditorChange = (event, editor) => {
-    const data = editor.getData();
-    setContent(data);
+const TextEditor = ({ onInteractCommentForm }) => {
+  const onBlur = (data) => {
+    // onInteractCommentForm(data);
   };
-
   return (
     <CKEditor
-      editor={ClassicEditor}
-      data="<p>Hello from CKEditor 5!</p>"
+      editor={InlineEditor}
+      data=''
+      config={{
+        placeholder: 'Add to discussion...',
+        toolbar: {
+          items: [
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            'underline',
+            'strikethrough',
+
+            'link',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'outdent',
+            'indent',
+            '|',
+            'imageUpload',
+            'blockQuote',
+            'insertTable',
+
+            'mediaEmbed',
+            'undo',
+            'redo',
+          ],
+        },
+      }}
       onReady={(editor) => {
         // You can store the "editor" and use when it is needed.
-        console.log("Editor is ready to use!", editor);
+        console.log('Editor is ready to use!', editor);
       }}
       onChange={(event, editor) => {
         const data = editor.getData();
         console.log({ event, editor, data });
       }}
       onBlur={(event, editor) => {
-        console.log("Blur.", editor);
+        const data = editor.getData();
+        console.log(event, data);
+        onBlur(data);
       }}
       onFocus={(event, editor) => {
-        console.log("Focus.", editor);
+        console.log('Focus.', editor);
       }}
     />
   );

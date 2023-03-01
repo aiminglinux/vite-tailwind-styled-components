@@ -36,13 +36,12 @@ const Comment = ({ comment, depth }) => {
 
   useEffect(() => {
     const closeCommentMenu = (e) => {
-      e.preventDefault();
       if (commentMenuRef.current?.contains(e.target)) return;
       toggleCommentMenu(false);
     };
     document.addEventListener("mousedown", closeCommentMenu);
     return () => document.removeEventListener("mousedown", closeCommentMenu);
-  }, []);
+  }, [commentMenu]);
 
   return (
     <Xwrapper>
@@ -52,15 +51,15 @@ const Comment = ({ comment, depth }) => {
         }`}
         onLoad={() => updateXarrow()}
       >
-        <aside>
-          <a href="#" id={`${comment.id}`}>
-            <img
-              className="rounded-full w-12"
-              src={comment.author.picture.url}
-              alt="avatar"
-            />
-          </a>
-        </aside>
+        {/* <aside> */}
+        <a href="#" id={`${comment.id}`}>
+          <img
+            className="rounded-full w-12"
+            src={comment.author.picture.url}
+            alt="avatar"
+          />
+        </a>
+        {/* </aside> */}
 
         <div className="w-full ">
           <div className="bg-white border p-2 rounded-md space-y-2 relative">
@@ -105,7 +104,7 @@ const Comment = ({ comment, depth }) => {
           <footer className="text-base flex items-center gap-4 mt-2">
             <button
               onClick={handleLikeClick}
-              disabled={isAnimated}
+              // disabled={isAnimated}
               className={`${isLiked ? "bg-pink-50" : ""} ${
                 isAnimated ? "opacity-10" : ""
               } flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer`}

@@ -1,6 +1,5 @@
 import Comment from "./Comment";
 import { Xwrapper } from "react-xarrows";
-import { isCommentLikedByUser } from "../../utils/string";
 
 const CommentList = ({ comments, depth = 0, id }) => {
   return comments.map((comment) => (

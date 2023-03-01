@@ -216,7 +216,7 @@ const PostEditor = () => {
                 placeholder={"Write your awesome post here..."}
               />
 
-              {/* <EditorForm /> */}
+              {/* <TextEditor /> */}
             </div>
 
             <div>

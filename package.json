@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
+    "@aimingnpm/ckeditor5-build-inline": "^36.0.4",
     "@ckeditor/ckeditor5-react": "^5.1.0",
     "@hookform/resolvers": "^2.9.8",
     "@reduxjs/toolkit": "^1.8.2",
