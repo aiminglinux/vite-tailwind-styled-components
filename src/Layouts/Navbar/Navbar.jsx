@@ -1,26 +1,26 @@
-import { Fragment, useEffect, useRef, memo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import tw, { styled, theme } from "twin.macro";
+import { Fragment, useEffect, useRef, memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import tw, { styled, theme } from 'twin.macro';
 
-import { selectCurrentUser } from "../../core/features/auth/authSlice";
-import { useLazyLogoutQuery } from "../../core/features/auth/authApiSlice";
-import useRequireAuthen from "../../hooks/useRequireAuthen";
-import Modal from "../../components/Portal/Component/Modal";
+import { selectCurrentUser } from '../../core/features/auth/authSlice';
+import { useLazyLogoutQuery } from '../../core/features/auth/authApiSlice';
+import useRequireAuthen from '../../hooks/useRequireAuthen';
+import Modal from '../../components/Portal/Component/Modal';
 
 import {
   AiOutlineBell,
   AiOutlineCode,
   AiOutlineMenu,
   AiOutlineSearch,
-} from "react-icons/ai";
+} from 'react-icons/ai';
 
-import useBreakpoint from "../../hooks/useBreakpoint";
-import useToggle from "../../hooks/useToggle";
+import useBreakpoint from '../../hooks/useBreakpoint';
+import useToggle from '../../hooks/useToggle';
 
-import Button from "../../components/Button/Button";
-import postsApiSlice from "../../core/features/posts/postsApiSlice";
-import MobileMenu from "./components/MobileMenu";
+import Button from '../../components/Button/Button';
+import postsApiSlice from '../../core/features/posts/postsApiSlice';
+import MobileMenu from './components/MobileMenu';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -28,25 +28,27 @@ function Navbar() {
   const currentUser = useSelector(selectCurrentUser);
   const { isAuthed } = useRequireAuthen();
   const navBarRef = useRef(null);
-  const isMobile = useBreakpoint(theme`screens.md`.replace("px", ""));
+  const isMobile = useBreakpoint(theme`screens.md`.replace('px', ''));
   const [mobileMenu, toggleMobileMenu] = useToggle(false);
   const [profileMenu, toggleProfileMenu] = useToggle(false);
   const [modal, toggleModal] = useToggle(false);
   const dispatch = useDispatch();
+
+  console.log(currentUser);
 
   useEffect(() => {
     const closeProfileMenu = (e) => {
       if (navBarRef.current.contains(e.target)) return;
       toggleProfileMenu(false);
     };
-    document.addEventListener("mousedown", closeProfileMenu);
-    return () => document.removeEventListener("mousedown", closeProfileMenu);
+    document.addEventListener('mousedown', closeProfileMenu);
+    return () => document.removeEventListener('mousedown', closeProfileMenu);
   }, []);
 
   const handleLogout = (async) => {
     try {
       trigger();
-      navigate("/");
+      navigate('/');
     } catch (error) {
       console.log(error);
     }
@@ -99,24 +101,24 @@ function Navbar() {
           <RightSide>
             {isAuthed ? (
               <Fragment>
-                <Link to="create-post" className="hidden md:block">
+                <Link to='create-post' className='hidden md:block'>
                   <Button>Create Post</Button>
                 </Link>
 
                 <Link
-                  to="#!"
-                  className="relative hover:bg-blue-200 p-1 rounded-md"
+                  to='#!'
+                  className='relative hover:bg-blue-200 p-1 rounded-md'
                 >
                   <AiOutlineBell size={32} />
-                  <div className="absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full">
-                    <small className="text-lg">3</small>
+                  <div className='absolute top-0 right-1 bg-red-400 border text-xs px-1 w-5 h-5 items-center justify-center inline-flex rounded-full'>
+                    <small className='text-lg'>3</small>
                   </div>
                 </Link>
 
                 <div>
                   <Avatar
-                    id="avatar"
-                    src={currentUser.picture.url}
+                    id='avatar'
+                    src={currentUser.picture?.url}
                     onClick={toggleProfileMenu}
                   />
                 </div>
@@ -126,22 +128,22 @@ function Navbar() {
                       <MenuItem>
                         <Link to={`/${currentUser.username}`}>
                           <div>
-                            <span className="block">{currentUser.name}</span>
+                            <span className='block'>{currentUser.name}</span>
                             <small>@{currentUser.username}</small>
                           </div>
                         </Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to="dashboard">Dashboard</Link>
+                        <Link to='dashboard'>Dashboard</Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to="create-post">Create Post</Link>
+                        <Link to='create-post'>Create Post</Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to="reading-list">Reading List</Link>
+                        <Link to='reading-list'>Reading List</Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to="settings">Settings</Link>
+                        <Link to='settings'>Settings</Link>
                       </MenuItem>
                       <MenuItem>
                         <Link onClick={toggleModal}>Log Out</Link>
@@ -152,10 +154,10 @@ function Navbar() {
               </Fragment>
             ) : (
               <Fragment>
-                <Link to="auth/login">
+                <Link to='auth/login'>
                   <Button isText>Log in</Button>
                 </Link>
-                <Link to="auth/register">
+                <Link to='auth/register'>
                   <Button>Create account</Button>
                 </Link>
               </Fragment>
@@ -175,7 +177,7 @@ const MobMenu = styled.div`
   }
 `;
 const Logo = styled(Link).attrs({
-  to: "/",
+  to: '/',
 })`
   > svg {
     ${tw`w-12 h-12`}

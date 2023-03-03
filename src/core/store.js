@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
   FLUSH,
   PAUSE,
@@ -8,24 +8,22 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-import apiSlice from "./features/api/apiSlice";
-import authReducer from "./features/auth/authSlice";
-import notificationReducer from "./features/notifications/NotificationSlice";
+import apiSlice from './features/api/apiSlice';
+import authReducer from './features/auth/authSlice';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   version: 1,
   storage: storage,
-  blacklist: ["notification"],
+  blacklist: ['comment', 'post'],
 };
 
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   auth: authReducer,
-  notification: notificationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

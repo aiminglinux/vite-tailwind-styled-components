@@ -1,15 +1,24 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import InlineEditor from '@aimingnpm/ckeditor5-build-inline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const TextEditor = ({ onInteractCommentForm }) => {
-  const onBlur = (data) => {
-    // onInteractCommentForm(data);
+const TextEditor = ({ onInteractCommentForm, previewContent }) => {
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    setContent(previewContent);
+  }, [previewContent]);
+
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setContent(data);
+    onInteractCommentForm(data);
   };
+
   return (
     <CKEditor
       editor={InlineEditor}
-      data=''
+      data={content}
       config={{
         placeholder: 'Add to discussion...',
         toolbar: {
@@ -42,14 +51,9 @@ const TextEditor = ({ onInteractCommentForm }) => {
         // You can store the "editor" and use when it is needed.
         console.log('Editor is ready to use!', editor);
       }}
-      onChange={(event, editor) => {
-        const data = editor.getData();
-        console.log({ event, editor, data });
-      }}
+      onChange={handleEditorChange}
       onBlur={(event, editor) => {
-        const data = editor.getData();
-        console.log(event, data);
-        onBlur(data);
+        console.log('Blur', editor);
       }}
       onFocus={(event, editor) => {
         console.log('Focus.', editor);

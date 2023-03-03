@@ -1,18 +1,18 @@
-import tw from "twin.macro";
-import { Fragment, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import tw from 'twin.macro';
+import { Fragment, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import { useLoginMutation } from "../../core/features/auth/authApiSlice";
+import { useLoginMutation } from '../../core/features/auth/authApiSlice';
 import {
   setCredentials,
   setToken,
   setAuthModal,
-} from "../../core/features/auth/authSlice";
-import useRequireAuthen from "../../hooks/useRequireAuthen";
+} from '../../core/features/auth/authSlice';
+import useRequireAuthen from '../../hooks/useRequireAuthen';
 
-import LoginForm from "./components/LoginForm";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import LoginForm from './components/LoginForm';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 function Login() {
   const { isAuthed } = useRequireAuthen();
@@ -23,9 +23,9 @@ function Login() {
     useLoginMutation();
 
   useEffect(() => {
-    if (isAuthed) navigate("/");
+    if (isAuthed) navigate('/');
     reset();
-    isSuccess && navigate("/");
+    isSuccess && navigate('/');
   }, [isSuccess]);
 
   const handleLoginFormSubmit = async (data) => {
@@ -81,17 +81,17 @@ function Login() {
       <Wrapper>
         <Inner>
           {isError && (
-            <div className="bg-red-200 rounded-md p-4">
-              <h1 className="text-red-400 font-bold text-2xl">
+            <div className='bg-red-200 rounded-md p-4'>
+              <h1 className='text-red-400 font-bold text-2xl'>
                 Hey, something went wrong:
               </h1>
-              <ul className="text-lg">
+              <ul className='text-lg'>
                 <li>&gt;&gt; {error?.data?.message}</li>
               </ul>
             </div>
           )}
-          <div className="text-center space-y-2">
-            <h1 className="font-bold text-4xl">Welcome to my community</h1>
+          <div className='text-center space-y-2'>
+            <h1 className='font-bold text-4xl'>Welcome to my community</h1>
             <p>
               This Community is the site just for learning Frontend technologies
               as HTML/CSS, ReactJS and NodeJS

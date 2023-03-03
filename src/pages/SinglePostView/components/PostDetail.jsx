@@ -24,17 +24,17 @@ import CommentList from '../../../components/Comment/CommentList';
 import ContentMarkdown from '../../../components/ContentMarkdown/ContentMarkdown';
 import Modal from '../../../components/Portal/Component/Modal';
 
-const PostDetail = forwardRef(({ post, onDelete }, ref) => {
-  const { username, id, picture } = useSelector(selectCurrentUser);
+const PostDetail = forwardRef(({ post, onDelete, isAuthed }, ref) => {
+  const { username, id } = useSelector(selectCurrentUser);
   const navigate = useNavigate();
   const cmtRef = useRef();
   const menuRef = useRef(null);
 
   const [postMenu, togglePostMenu] = useToggle(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(true);
   const [openModal, setOpenModal] = useState(false);
 
-  console.log(picture);
+  // console.log(picture);
 
   const rootComments =
     post.comments &&
@@ -180,7 +180,7 @@ const PostDetail = forwardRef(({ post, onDelete }, ref) => {
           </div>
 
           <div className='space-y-2'>
-            <CommentForm picture={picture} />
+            {isAuthed && <CommentForm />}
             {showComments && <CommentList comments={rootComments} id={id} />}
           </div>
         </div>

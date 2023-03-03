@@ -1,13 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { persistor } from "../../store";
-import { logout, setAuthModal, setToken } from "../auth/authSlice";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { persistor } from '../../store';
+import { logout, setAuthModal, setToken } from '../auth/authSlice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000",
-  credentials: "include",
+  baseUrl: 'http://localhost:5000',
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
-    if (token) headers.set("authorization", `Bearer ${token}`);
+    if (token) headers.set('authorization', `Bearer ${token}`);
     return headers;
   },
 });
@@ -16,15 +16,15 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 403) {
-    console.log("running...");
+    console.log('running...');
 
-    const refreshResult = await baseQuery("/refresh", api, extraOptions);
+    const refreshResult = await baseQuery('/refresh', api, extraOptions);
 
     if (refreshResult?.data) {
       api.dispatch(setToken(refreshResult.data));
       result = await baseQuery(args, api, extraOptions);
     } else {
-      await baseQuery("/logout", api, extraOptions);
+      await baseQuery('/logout', api, extraOptions);
       api.dispatch(logout());
       persistor.purge();
 
@@ -36,10 +36,10 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 };
 
 const apiSlice = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
-  tagTypes: ["User", "Post", "Tag", "Comment"],
+  tagTypes: ['User', 'Post', 'Tag'],
   keepUnusedDataFor: 5,
 });
 

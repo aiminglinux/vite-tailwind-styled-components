@@ -1,10 +1,19 @@
-import { result } from "lodash";
-import apiSlice from "../api/apiSlice";
+import apiSlice from '../api/apiSlice';
 
 const commentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getComments: builder.query({}),
-    addComment: builder.mutation({}),
+
+    addComment: builder.mutation({
+      query: ({ postId, commentText }) =>
+        // console.log('Id: ', commentData),
+        ({
+          url: `comments/${postId}`,
+          method: 'POST',
+          body: { text: commentText },
+        }),
+      keepUnusedDataFor: 1,
+    }),
 
     updateComment: builder.mutation({}),
 
@@ -13,18 +22,11 @@ const commentsApiSlice = apiSlice.injectEndpoints({
     commmentAction: builder.mutation({
       query: ({ id }) => ({
         url: `comments/${id}/like`,
-        method: "PATCH",
+        method: 'PATCH',
       }),
-      //   invalidatesTags: (result, err, {id}) => [{ type: 'Comment', id}],
-      //   async onQueryStarted({id, isLiked}, {dispatch, queryFulfilled}) {
-      //     const patchResult = dispatch(
-      //         commentsApiSlice.util.updateQueryData('getComments', parentPost, draftComments => {
-
-      //         })
-      //     )
-      //   }
     }),
   }),
 });
 
-export const { useCommmentActionMutation } = commentsApiSlice;
+export const { useCommmentActionMutation, useAddCommentMutation } =
+  commentsApiSlice;
