@@ -37,6 +37,7 @@ export const PostContext = createContext();
 const PostContainer = () => {
   const commentRef = useRef(null);
   const [likedCommentId, setLikedCommentId] = useState(null);
+  const [showReplyForm, setShowReplyForm] = useState(false);
   const { id } = useSelector(selectCurrentUser);
   const authModal = useSelector(selectAuthModal);
   const navigate = useNavigate();
@@ -69,14 +70,33 @@ const PostContainer = () => {
   //   username,
   //   { refetchOnMountOrArgChange: true }
   // );
-  const [commentText, setCommentText] = useState('');
+
+  const [commentData, setCommentData] = useState({
+    commentText: '',
+    commentId: undefined,
+  });
+
+  const handleCommentData = ({ text, commentId }) => {
+    setCommentData({ ...commentData, commentText: text });
+    if (commentId) {
+      setCommentData({
+        ...commentData,
+        commentId: commentId,
+      });
+    }
+  };
 
   const handleSubmitComment = async () => {
+    console.log('Submit data: ', commentData);
+    // setShowReplyForm(!showReplyForm);
+
     try {
       await addComment({
         postId,
-        commentText,
+        commentData,
       });
+      setShowReplyForm(!showReplyForm);
+
       refetch();
     } catch (err) {
       console.error(err);
@@ -134,7 +154,8 @@ const PostContainer = () => {
         handleCommentReaction,
         commentReactLoading,
         handleSubmitComment,
-        setCommentText,
+        handleCommentData,
+        showReplyForm,
       }}
     >
       {/* <Modal

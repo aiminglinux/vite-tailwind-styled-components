@@ -5,13 +5,16 @@ const commentsApiSlice = apiSlice.injectEndpoints({
     getComments: builder.query({}),
 
     addComment: builder.mutation({
-      query: ({ postId, commentText }) =>
-        // console.log('Id: ', commentData),
-        ({
-          url: `comments/${postId}`,
+      query: ({ postId, commentData }) => (
+        console.log('Id: ', commentData),
+        {
+          url: `comments/${postId}${
+            commentData.commentId ? `/${commentData.commentId}` : ''
+          }`,
           method: 'POST',
-          body: { text: commentText },
-        }),
+          body: { text: commentData.commentText },
+        }
+      ),
       keepUnusedDataFor: 1,
     }),
 

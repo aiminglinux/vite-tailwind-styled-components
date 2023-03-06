@@ -15,14 +15,20 @@ import ContentMarkdown from '../ContentMarkdown/ContentMarkdown';
 import CommentForm from './CommentForm';
 
 const Comment = ({ comment, depth }) => {
+  const {
+    handleCommentReaction,
+    commentReactLoading,
+    likedCommentId,
+    handleCommentData,
+    showReplyForm,
+  } = useContext(PostContext);
   const { id } = useSelector(selectCurrentUser);
   const [commentMenu, toggleCommentMenu] = useToggle(false);
   const [showReplies, setShowReplies] = useState(false);
-  const [replyFrom, setReplyForm] = useState(true);
+  const [replyForm, setReplyForm] = useState(false);
 
   const commentMenuRef = useRef(null);
-  const { handleCommentReaction, commentReactLoading, likedCommentId } =
-    useContext(PostContext);
+
   const isLiked = isCommentLikedByUser(comment, id);
   const isOwner = id === comment.author.id;
 
@@ -35,6 +41,13 @@ const Comment = ({ comment, depth }) => {
   const handleLikeClick = () => {
     handleCommentReaction(comment.id, isLiked);
   };
+
+  function handleReply(commentId) {
+    setReplyForm(!replyForm);
+    handleCommentData({ commentId: commentId });
+  }
+
+  useEffect(() => setReplyForm(false), [showReplyForm]);
 
   useEffect(() => {
     const closeCommentMenu = (e) => {
@@ -60,9 +73,9 @@ const Comment = ({ comment, depth }) => {
           />
         </a>
 
-        <div className='w-full '>
-          <div className='bg-white border p-2 rounded-md space-y-2 relative'>
-            <header className='flex justify-between space-x-2'>
+        <div className='w-full space-y-2'>
+          <div className='bg-white border rounded-md space-y-2 relative'>
+            <header className='flex justify-between space-x-2 p-2'>
               <div className='flex space-x-2'>
                 <h3>{comment.author.name}</h3>
                 <span>|</span>
@@ -101,28 +114,29 @@ const Comment = ({ comment, depth }) => {
                 </ul>
               )}
             </header>
-            <main>
+            <main className='p-2'>
               <ContentMarkdown children={comment.body} />
-              {/* <h3>{comment.body}</h3> */}
             </main>
           </div>
-          <footer className='text-base flex items-center gap-4 mt-2'>
-            <button
-              onClick={handleLikeClick}
-              className={`${isLiked ? 'bg-pink-50' : ''} ${
-                isAnimated ? 'opacity-10' : ''
-              } flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer`}
-            >
-              {isLiked ? (
-                <BsHeartFill size={20} className='text-pink-500' />
-              ) : (
-                <BsHeart size={20} />
-              )}
-              <span className='text-base lg:text-sm'>
-                {comment.likes.length} Likes
-              </span>
-            </button>
-            {comment.replies.length > 0 && (
+          <footer className='text-base flex items-center space-x-2'>
+            {!replyForm && (
+              <button
+                onClick={handleLikeClick}
+                className={`${isLiked ? 'bg-pink-50' : ''} ${
+                  isAnimated ? 'opacity-10' : ''
+                } flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer`}
+              >
+                {isLiked ? (
+                  <BsHeartFill size={20} className='text-pink-500' />
+                ) : (
+                  <BsHeart size={20} />
+                )}
+                <span className='text-base lg:text-sm'>
+                  {comment.likes.length} Likes
+                </span>
+              </button>
+            )}
+            {comment.replies.length > 0 && !replyForm && (
               <button
                 className='flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer'
                 onClick={handleToggleReplies}
@@ -134,17 +148,28 @@ const Comment = ({ comment, depth }) => {
                 </span>
               </button>
             )}
-            <div className='flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer'>
-              <BsReply size={24} />
-              <span className='text-base lg:text-sm'>Reply</span>
-            </div>
+            {!replyForm && (
+              <button
+                onClick={() => handleReply(comment.id)}
+                className='flex justify-between items-center gap-2 text-black-200 rounded-md px-2 py-1 hover:bg-white cursor-pointer'
+              >
+                <BsReply size={24} />
+                <span className='text-base lg:text-sm'>Reply</span>
+              </button>
+            )}
+            {replyForm && (
+              <CommentForm
+                replyMode
+                handleReply={handleReply}
+                placeholder={'Reply...'}
+              />
+            )}
           </footer>
           {showReplies && (
             <CommentList comments={comment.replies} depth={depth + 1} id={id} />
           )}
         </div>
       </div>
-      {/* <CommentForm /> */}
     </>
   );
 };

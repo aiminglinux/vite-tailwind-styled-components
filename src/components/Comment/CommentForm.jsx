@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../core/features/auth/authSlice';
 
@@ -6,18 +6,39 @@ import TextEditor from '../Editor/TextEditor';
 import Button from '../Button/Button';
 import ContentMarkdown from '../ContentMarkdown/ContentMarkdown';
 import { PostContext } from '../../pages/SinglePostView/PostContainer';
+import Avatar from '../Avatar/Avatar';
 
-const CommentForm = () => {
+const CommentForm = ({ replyMode = false, handleReply, placeholder }) => {
   const { picture } = useSelector(selectCurrentUser);
-  const { handleSubmitComment, setCommentText } = useContext(PostContext);
+  const { handleSubmitComment, handleCommentData } = useContext(PostContext);
   const [btn, setBtn] = useState(false);
   const [previewBtn, setPreviewBtn] = useState(false);
   const [previewContent, setPreviewContent] = useState('');
 
   function handleInteractCommentForm(data) {
     setPreviewContent(data);
-    setCommentText(data);
+    // setCommentText(data);
+    handleCommentData({ text: data });
   }
+
+  function handleDimiss() {
+    setBtn(false);
+    setPreviewBtn(false);
+    setPreviewContent('');
+    if (handleReply) {
+      handleReply();
+    }
+  }
+
+  function handleFocus() {
+    setBtn(true);
+  }
+
+  useEffect(() => {
+    if (replyMode) {
+      setBtn(true);
+    }
+  }, [replyMode]);
 
   async function handleSubmitBtn() {
     await handleSubmitComment(), setBtn(false), setPreviewContent('');
@@ -25,23 +46,26 @@ const CommentForm = () => {
 
   return (
     <>
-      <div className='border rounded-md flex p-2 space-x-2 bg-gray-200'>
-        <div className='flex-none'>
-          <img src={picture?.url} alt='' className='rounded-full w-12' />
-        </div>
-        <div className={`w-full`} onFocus={() => setBtn(true)}>
+      <div
+        className={`border rounded-md flex bg-gray-200 w-full space-x-2 ${
+          replyMode ? '' : 'p-2'
+        }`}
+      >
+        {!replyMode && <Avatar picture={picture} />}
+        <div className={`w-full space-y-2`} onFocus={handleFocus}>
           <div className={`bg-white rounded-md ${previewBtn ? 'p-4' : ''}`}>
             {!previewBtn && (
               <TextEditor
                 onInteractCommentForm={handleInteractCommentForm}
                 previewContent={previewContent}
+                placeholder={placeholder}
               />
             )}
             {previewBtn && <ContentMarkdown children={previewContent} />}
           </div>
 
-          <div className='space-x-2 bg-gray-200 mt-2'>
-            {btn && (
+          {btn && (
+            <div className='space-x-2 bg-gray-200'>
               <Button
                 hasBg
                 disabled={Boolean(!previewContent)}
@@ -49,16 +73,18 @@ const CommentForm = () => {
               >
                 Submit
               </Button>
-            )}
-            {btn && (
+
               <Button
                 onClick={() => setPreviewBtn(!previewBtn)}
                 disabled={Boolean(!previewContent)}
               >
                 {previewBtn ? 'Continue editing' : 'Preview'}
               </Button>
-            )}
-          </div>
+              <Button isText onClick={handleDimiss}>
+                Dismiss
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </>

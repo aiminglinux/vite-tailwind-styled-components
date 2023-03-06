@@ -180,7 +180,7 @@ const PostDetail = forwardRef(({ post, onDelete, isAuthed }, ref) => {
           </div>
 
           <div className='space-y-2'>
-            {isAuthed && <CommentForm />}
+            {isAuthed && <CommentForm placeholder={'Add to discussion...'} />}
             {showComments && <CommentList comments={rootComments} id={id} />}
           </div>
         </div>

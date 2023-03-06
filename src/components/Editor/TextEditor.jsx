@@ -2,7 +2,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import InlineEditor from '@aimingnpm/ckeditor5-build-inline';
 import { useEffect, useState } from 'react';
 
-const TextEditor = ({ onInteractCommentForm, previewContent }) => {
+const TextEditor = ({ onInteractCommentForm, previewContent, placeholder }) => {
   const [content, setContent] = useState('');
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const TextEditor = ({ onInteractCommentForm, previewContent }) => {
       editor={InlineEditor}
       data={content}
       config={{
-        placeholder: 'Add to discussion...',
+        placeholder,
         toolbar: {
           items: [
             'heading',
