@@ -55,7 +55,6 @@ const profileSchema = yup.object().shape({
 const UserProfile = () => {
   const currentUser = useSelector(selectCurrentUser);
   const [file, setFile] = useState(currentUser.picture?.url);
-  console.log('file: ', file);
   const previewAvatar = useBase64(file);
   const { isAuthed, handleAuth } = useRequireAuthen();
   const navigate = useNavigate();
@@ -99,7 +98,6 @@ const UserProfile = () => {
 
   const { id } = currentUser;
   const handleFormSubmit = async (data) => {
-    // return console.log('File Data: ', file);
     const {
       name,
       bio,
@@ -115,12 +113,10 @@ const UserProfile = () => {
 
     if (isAuthed) {
       try {
-        console.log('Sent: ', file);
         await updateUser({
           id,
+          file,
           // name,
-          files: file,
-          test: 'test',
           // picture: {
           //   url: file,
           //   publicId: currentUser.picture?.publicId,

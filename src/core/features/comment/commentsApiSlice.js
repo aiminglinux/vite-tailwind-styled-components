@@ -4,6 +4,10 @@ const commentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getComments: builder.query({}),
 
+    getComment: builder.query({
+      query: (commentId) => `/comments/${commentId}`,
+    }),
+
     addComment: builder.mutation({
       query: ({ postId, commentData }) => (
         console.log('Id: ', commentData),
@@ -31,5 +35,8 @@ const commentsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useCommmentActionMutation, useAddCommentMutation } =
-  commentsApiSlice;
+export const {
+  useCommmentActionMutation,
+  useAddCommentMutation,
+  useGetCommentQuery,
+} = commentsApiSlice;

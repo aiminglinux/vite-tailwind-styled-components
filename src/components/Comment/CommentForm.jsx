@@ -8,16 +8,20 @@ import ContentMarkdown from '../ContentMarkdown/ContentMarkdown';
 import { PostContext } from '../../pages/SinglePostView/PostContainer';
 import Avatar from '../Avatar/Avatar';
 
-const CommentForm = ({ replyMode = false, handleReply, placeholder }) => {
+const CommentForm = ({
+  replyMode = false,
+  handleReply,
+  placeholder,
+  initialState,
+}) => {
   const { picture } = useSelector(selectCurrentUser);
   const { handleSubmitComment, handleCommentData } = useContext(PostContext);
   const [btn, setBtn] = useState(false);
   const [previewBtn, setPreviewBtn] = useState(false);
-  const [previewContent, setPreviewContent] = useState('');
+  const [previewContent, setPreviewContent] = useState(initialState || '');
 
   function handleInteractCommentForm(data) {
     setPreviewContent(data);
-    // setCommentText(data);
     handleCommentData({ text: data });
   }
 

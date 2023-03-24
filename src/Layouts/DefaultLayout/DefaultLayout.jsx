@@ -1,14 +1,14 @@
-import { Fragment } from "react";
-import { Outlet } from "react-router-dom";
-import tw from "twin.macro";
-import ScrollButton from "../../components/ScrollToTop/ScrollToTop";
-import Navbar from "../Navbar/Navbar";
+import { Fragment } from 'react';
+import { Outlet } from 'react-router-dom';
+import tw from 'twin.macro';
+import ScrollButton from '../../components/ScrollToTop/ScrollToTop';
+import Navbar from '../Navbar/Navbar';
 
 function DefaultLayout() {
   return (
     <Fragment>
       <Wrapper>
-        <Navbar />
+        {/* <Navbar /> */}
         <Outlet />
         <ScrollButton />
       </Wrapper>

@@ -1,14 +1,14 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { BsHeart, BsHeartFill, BsThreeDots, BsReply } from 'react-icons/bs';
+import { MdOutlineModeComment } from 'react-icons/md';
 
 import { selectCurrentUser } from '../../core/features/auth/authSlice';
 import useToggle from '../../hooks/useToggle';
 
-import { MdOutlineModeComment } from 'react-icons/md';
-
 import { formatDate, isCommentLikedByUser } from '../../utils/string';
 
-import { useSelector } from 'react-redux';
 import { PostContext } from '../../pages/SinglePostView/PostContainer';
 import CommentList from './CommentList';
 import ContentMarkdown from '../ContentMarkdown/ContentMarkdown';
@@ -22,10 +22,12 @@ const Comment = ({ comment, depth }) => {
     handleCommentData,
     showReplyForm,
   } = useContext(PostContext);
+  const navigate = useNavigate();
   const { id } = useSelector(selectCurrentUser);
   const [commentMenu, toggleCommentMenu] = useToggle(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyForm, setReplyForm] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const commentMenuRef = useRef(null);
 
@@ -74,16 +76,21 @@ const Comment = ({ comment, depth }) => {
         </a>
 
         <div className='w-full space-y-2'>
-          <div className='bg-white border rounded-md space-y-2 relative'>
-            <header className='flex justify-between space-x-2 p-2'>
-              <div className='flex space-x-2'>
+          <div className='relative'>
+            <header className='flex justify-between space-x-2 rounded-md'>
+              <div className='flex space-x-2 p-2'>
                 <h3>{comment.author.name}</h3>
                 <span>|</span>
-                <h3>{formatDate(comment.createdAt)}</h3>
+                <h3
+                  className='text-gray-500 hover:text-gray-600 hover:cursor-pointer'
+                  onClick={() => navigate(`/comments/${comment.id}`)}
+                >
+                  {formatDate(comment.createdAt)}
+                </h3>
               </div>
               <div
                 onClick={toggleCommentMenu}
-                className='hover:bg-indigo-100 text-center p-2 hover:rounded-md'
+                className='hover:bg-indigo-300 text-center p-2 hover:rounded-md'
                 ref={commentMenuRef}
               >
                 <BsThreeDots size={20} />
@@ -92,6 +99,7 @@ const Comment = ({ comment, depth }) => {
                 <ul
                   className='absolute right-2 top-12 bg-white border py-2 px-2 rounded-md w-1/3 z-20'
                   onClick={toggleCommentMenu}
+                  ref={commentMenuRef}
                 >
                   <li className='hover:bg-indigo-100 hover:text-indigo-500 p-2 rounded-md'>
                     Copy Link
@@ -102,7 +110,10 @@ const Comment = ({ comment, depth }) => {
                     </li>
                   )}
                   {isOwner && (
-                    <li className='hover:bg-indigo-100 hover:text-indigo-500 p-2 rounded-md'>
+                    <li
+                      className='hover:bg-indigo-100 hover:text-indigo-500 p-2 rounded-md'
+                      onClick={() => setEditMode(true)}
+                    >
                       Edit
                     </li>
                   )}
@@ -114,10 +125,11 @@ const Comment = ({ comment, depth }) => {
                 </ul>
               )}
             </header>
-            <main className='p-2'>
-              <ContentMarkdown children={comment.body} />
-            </main>
           </div>
+          <main className={`bg-white rounded-md ${editMode ? '' : 'p-2'}`}>
+            {!editMode && <ContentMarkdown children={comment.body} />}
+            {editMode && <CommentForm replyMode initialState={comment.body} />}
+          </main>
           <footer className='text-base flex items-center space-x-2'>
             {!replyForm && (
               <button

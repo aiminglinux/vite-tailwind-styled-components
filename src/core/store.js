@@ -18,7 +18,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: storage,
-  blacklist: ['comment', 'post'],
+  blacklist: [],
 };
 
 const rootReducer = combineReducers({

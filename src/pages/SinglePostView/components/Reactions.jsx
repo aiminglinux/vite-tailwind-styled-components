@@ -90,7 +90,7 @@ const Reactions = ({ commentRef, post, id, onPostActions, isLoading }) => {
                     isLoading && buttonAnimate.likeAnimate
                       ? 'border-t-2 border-t-pink-500 animate-spin'
                       : ''
-                  } p-6 rounded-full hover:text-blue-500 transition-none border-2 border-transparent absolute items-center group-hover:bg-pink-100`}
+                  } p-6 rounded-full hover:text-blue-500 transition-none border-2 border-transparent absolute items-center group-hover:bg-pink-200`}
                 />
               </button>
               <span>{post.likes.length}</span>

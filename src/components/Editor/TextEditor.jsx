@@ -11,6 +11,7 @@ const TextEditor = ({ onInteractCommentForm, previewContent, placeholder }) => {
 
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
+
     setContent(data);
     onInteractCommentForm(data);
   };
@@ -46,10 +47,28 @@ const TextEditor = ({ onInteractCommentForm, previewContent, placeholder }) => {
             'redo',
           ],
         },
+        mention: {
+          feeds: [
+            {
+              marker: '@',
+              feed: [
+                '@Barney',
+                '@Lily',
+                '@Marry Ann',
+                '@Marshall',
+                '@Robin',
+                '@Ted',
+              ],
+              minimumCharacters: 1,
+            },
+          ],
+        },
       }}
       onReady={(editor) => {
+        // const mentionMarkers = editor.plugins.get('Mention').editor.getData();
         // You can store the "editor" and use when it is needed.
         console.log('Editor is ready to use!', editor);
+        // console.log('Test: ', mentionMarkers);
       }}
       onChange={handleEditorChange}
       onBlur={(event, editor) => {

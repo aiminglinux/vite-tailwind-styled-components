@@ -11,14 +11,15 @@ const usersApiSlice = apiSlice.injectEndpoints({
           : [{ type: 'User', id: 'LIST' }],
     }),
     updateUser: builder.mutation({
-      query: (body) => (
-        console.log('api: ', body),
-        {
+      query: (body) => {
+        const formData = new FormData();
+        formData.append('file', body.file);
+        return {
           url: `/users/${body.id}`,
-          body,
+          body: formData,
           method: 'PATCH',
-        }
-      ),
+        };
+      },
       invalidatesTags: (result, err, { id }) => [{ type: 'User', id }],
       async onQueryStarted(body, { dispatch, queryFulfilled }) {
         const { data: updatedUser } = await queryFulfilled;
