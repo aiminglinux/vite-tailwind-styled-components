@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-konnect-fe
+  namespace: dev-konnect
+  labels:
+    app: dev-connect-fe
+spec:
+  containers:
+    - name: devkonnect-fe
+      image: freeman82/dev-konnect:fe-devkonnect
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 3000
+      env:
+        - name: VITE_BACKEND_API_ADD
+          valueFrom:
+            secretKeyRef:
+              name: fe-devkonnect
+              key: VITE_BACKEND_API_ADD
+
+  imagePullSecrets:
+    - name: dockerhub-creds

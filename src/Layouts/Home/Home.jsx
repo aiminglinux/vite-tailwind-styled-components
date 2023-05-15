@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import tw from "twin.macro";
+import React, { useEffect } from 'react';
+import tw from 'twin.macro';
 
-import { useSelector } from "react-redux";
-import { useGetPostsQuery } from "../../core/features/posts/postsApiSlice";
-import { selectCurrentUser } from "../../core/features/auth/authSlice";
-import useRequireAuthen from "../../hooks/useRequireAuthen";
+import { useSelector } from 'react-redux';
+import { useGetPostsQuery } from '../../core/features/posts/postsApiSlice';
+import { selectCurrentUser } from '../../core/features/auth/authSlice';
+import useRequireAuthen from '../../hooks/useRequireAuthen';
 
-import PostList from "../../components/PostList/PostList";
-import LeftSideBar from "../LeftSideBar/LeftSideBar";
-import RightSideBar from "../RightSideBar/RightSideBar";
+import PostList from '../../components/PostList/PostList';
+import LeftSideBar from '../LeftSideBar/LeftSideBar';
+import RightSideBar from '../RightSideBar/RightSideBar';
 
 function Home() {
   const { id } = useSelector(selectCurrentUser);
@@ -16,6 +16,9 @@ function Home() {
   const { data: posts, isFetching } = useGetPostsQuery(null, {
     refetchOnMountOrArgChange: true,
   });
+
+  console.log(posts);
+  console.log('test', import.meta.env.VITE_BACKEND_API_ADD);
 
   // useEffect(() => {
   //   if (!isAuthen) {

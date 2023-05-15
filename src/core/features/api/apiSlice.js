@@ -3,7 +3,7 @@ import { persistor } from '../../store';
 import { logout, setAuthModal, setToken } from '../auth/authSlice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5000',
+  baseUrl: 'http://api.devkonnect.com',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;

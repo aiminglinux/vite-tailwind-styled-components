@@ -16,6 +16,7 @@ COPY . .
 # Build the app
 RUN npm run build
 
+
 # Use a lightweight Node.js 16 image for production
 FROM node:16-alpine
 
@@ -27,6 +28,7 @@ COPY --from=builder /app/dist .
 
 # Install serve for serving the app
 RUN npm install -g serve
+RUN apk --no-cache add curl
 
 # Start the app with serve
 CMD ["serve", "-s", "."]

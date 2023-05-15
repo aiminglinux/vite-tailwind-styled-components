@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.ck.ck-toolbar {
+/* .ck.ck-toolbar {
   position: absolute;
   top: -82px;
   border: 1px solid rgb(229, 231, 235);
@@ -16,4 +16,4 @@
 
 .ck.ck-toolbar.ck-toolbar_floating {
   border: 1px solid rgb(229, 231, 235);
-}
+} */

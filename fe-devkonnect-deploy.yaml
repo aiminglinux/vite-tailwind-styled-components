@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-konnect-frontend
+  namespace: dev-konnect
+spec:
+  selector:
+    matchLabels:
+      app: dev-konnect-frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dev-konnect-frontend
+    spec:
+      containers:
+        - name: devkonnect-fe
+          image: freeman82/dev-konnect:fe-devkonnect
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_BACKEND_API_ADD
+              valueFrom:
+                secretKeyRef:
+                  name: fe-devkonnect
+                  key: VITE_BACKEND_API_ADD
+
+      imagePullSecrets:
+        - name: dockerhub-creds
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dev-konnect
+  name: dev-konnect-frontend-svc
+spec:
+  selector:
+    app: dev-konnect-frontend
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-resource
+  namespace: dev-konnect
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.devkonnect.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dev-konnect-backend-svc
+                port:
+                  number: 80
+    - host: devkonnect.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dev-konnect-frontend-svc
+                port:
+                  number: 80

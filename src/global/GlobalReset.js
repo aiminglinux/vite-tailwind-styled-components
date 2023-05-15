@@ -1,5 +1,5 @@
-import { createGlobalStyle } from "styled-components";
-import { theme } from "twin.macro";
+import { createGlobalStyle } from 'styled-components';
+import { theme } from 'twin.macro';
 
 const GlobalReset = createGlobalStyle`
 *,
@@ -59,6 +59,22 @@ picture {
   max-width: 100%;
   display: block;
 }
+.ck.ck-toolbar {
+  position: absolute;
+  top: -82px;
+  border: 1px solid rgb(229, 231, 235);
+  width: full;
+}
+
+.ck.ck-balloon-panel_visible {
+  border: none;
+  box-shadow: none;
+}
+
+.ck.ck-toolbar.ck-toolbar_floating {
+  border: 1px solid rgb(229, 231, 235);
+}
+
 `;
 
 export default GlobalReset;
