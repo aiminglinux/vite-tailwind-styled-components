@@ -48,9 +48,9 @@ const EditorForm = () => {
       RichUtils.toggleInlineStyle(editorState, "STRIKETHROUGH")
     );
   };
-  const toggleBlockType = (blockType) => {
-    onEditorStateChange(RichUtils(toggleBlockType(editorState, blockType)));
-  };
+  // const toggleBlockType = (blockType) => {
+  //   onEditorStateChange(RichUtils(toggleBlockType(editorState, blockType)));
+  // };
 
   return (
     <div className="border">

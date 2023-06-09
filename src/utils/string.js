@@ -8,15 +8,15 @@ export const createPostUrl = (postTitle, postId) => {
   return encodeURIComponent(`${postTitle}-${postId}`);
 };
 
-export const createPostSlug = (postTitle) => {
-  const slug = postTitle
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return `${slug}`;
-};
+// export const createPostSlug = (postTitle) => {
+//   const slug = postTitle
+//     .toLowerCase()
+//     .trim()
+//     .replace(/[^\w\s-]/g, "")
+//     .replace(/[\s_-]+/g, "-")
+//     .replace(/^-+|-+$/g, "");
+//   return `${slug}`;
+// };
 
 export const getPostParams = (postUrl) => {
   const decoded = decodeURIComponent(postUrl);
