@@ -11,8 +11,9 @@ const ProfileCard = ({
   children,
 }) => {
   const nodeRef = useRef(null);
-  if (!isOpen) return null;
   useEffect(() => {
+    if (!isOpen) return null;
+
     const updateCoords = debounce(updateTooltipCoords, 100);
     window.addEventListener('resize', updateCoords);
     return () => window.removeEventListener('resize', updateCoords);
