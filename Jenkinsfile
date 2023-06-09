@@ -1,8 +1,7 @@
 pipeline {
-    agent {
-        node {
-            tool 'nodejs'
-        }
+    agent any
+    tools {
+        nodejs 'nodejs'
     }
     stages {
         stage('Sonarqube') {
