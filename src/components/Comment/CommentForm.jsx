@@ -45,7 +45,9 @@ const CommentForm = ({
   }, [replyMode]);
 
   async function handleSubmitBtn() {
-    await handleSubmitComment(), setBtn(false), setPreviewContent('');
+    await handleSubmitComment();
+    setBtn(false);
+    setPreviewContent('');
   }
 
   return (
